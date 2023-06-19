@@ -1,1 +1,17 @@
-# Elegans_Briggsae_Embryo_Single_Cell
+# Elegans/Briggsae Embryo Single-Cell Dataset
+Christopher Large, Rupa Khanal, LaDeana Hillier, Juhnyong Kim, John I. Murray, and Robert Waterston
+
+
+Cell Summary Info:
+ - The relative TPM of every gene in elegans and briggsae
+ - A barplot of the cell type markers for that cell type using the WormCat gene categories as a descriptor
+The top cell type markers that are shared (black outline), private to elegans (green), or private to briggsae (blue)
+ - A bunch of cell type metrics, where the values for that cell type are shown in green for elegans and blue for briggsae (red for both) ontop of the dataset wide distribution
+ - Cell count: number of cells in the dataset
+ - Gini coeficient: A measure of inequality that shows how evenly distributed the TPM values are (0 = even, 1 = skewed)
+ - The number of genes ‘detected’ in that cell type. Calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0
+ - How many of the markers of that cell type are just in one species versus the total markers (shared + private)
+ - Number of UMI’s of that cell type
+ - Jensen-Shannon Distance: Metric of distance between the two species cell transcriptomes
+ - Pearson Correlation: Metric of similarity between the two species cell transcriptomes
+ - The number of differentially expressed genes between the species
