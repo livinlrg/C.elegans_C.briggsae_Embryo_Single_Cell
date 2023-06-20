@@ -1,9 +1,9 @@
 # Elegans/Briggsae Embryo Single-Cell Dataset
-Christopher Large, Rupa Khanal, LaDeana Hillier, Juhnyong Kim, John I. Murray, and Robert Waterston
+Christopher Large, Rupa Khanal, LaDeana Hillier, Junhyong Kim, John I. Murray, and Robert Waterston
 
 In anticipation of our upcoming manuscript describing a comparitive analysis of single-cells from _C. elegnas_ and _C. briggsae_ embryogenesis, we are releasing multiple forms of data summaries that we hope will be useful to the community.
 
-Preprint: [Link upcoming]
+__Preprint: [Link upcoming]__
 
 The avaliable data are:
  - A VisCello Object
@@ -25,6 +25,10 @@ devtools::install_github("qinzhu/VisCello") # install
 library(VisCello) # load
 cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 ```
+<details>
+           <summary>VisCello Example</summary>
+           <p>Content 1 Content 1 Content 1 Content 1 Content 1</p>
+</details>
 
 ### Cell Summary Info:
  1. The relative TPM of every gene in elegans and briggsae
