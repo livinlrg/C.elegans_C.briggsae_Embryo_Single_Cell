@@ -1,7 +1,7 @@
 # Elegans/Briggsae Embryo Single-Cell Dataset
-Christopher Large, Rupa Khanal, LaDeana Hillier, Junhyong Kim, John I. Murray, and Robert Waterston
+Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Junhyong Kim, John I. Murray, and Robert Waterston
 
-In anticipation of our upcoming manuscript describing a comparitive analysis of single-cells from _C. elegnas_ and _C. briggsae_ embryogenesis, we are releasing multiple forms of data summaries that we hope will be useful to the community.
+In anticipation of our upcoming manuscript describing a comparitive analysis of single-cells from _C. elegans_ and _C. briggsae_ embryogenesis, we are releasing multiple forms of data summaries that we hope will be useful to the community.
 
 __Preprint: [Link upcoming]__
 
