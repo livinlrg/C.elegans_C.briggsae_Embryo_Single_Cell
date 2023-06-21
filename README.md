@@ -1,4 +1,4 @@
-# C. elegans/C. briggsae Embryo Single-Cell Dataset
+# _C. elegans_ and _C. briggsae_ Embryo Single-Cell Dataset
 Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Junhyong Kim, John I. Murray, and Robert Waterston
 
 In anticipation of our upcoming manuscript describing a comparitive analysis of single-cells from _C. elegans_ and _C. briggsae_ embryogenesis, we are releasing multiple forms of data summaries that we hope will be useful to the community.
@@ -69,37 +69,50 @@ cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 </p>
 
 <p>
+The genes are labeled with the gene name, sequence name, and WBGene name from their respective species. Searching for any of these gene name types will pull up your query.
+</p>
+
+<p>
  In addition to viewing expression, you can visualize the cell identity and other metadata that we have annotated using orthologous markers between <em>C. elegans</em> and <em>C. briggsae</em>. The information about these metadata columns is below.
 </p>
  
-
 #### Meta Data:
 - lineage - Manually annotated cellular lineage. For ambiguities in division orientation, an x is used (e.g. MSx to refer to MSa and MSp).
 - cell_type - Manually annotated terminal cell type identity. 
 - species - Whether the cell is from <em>C. elegans</em> or <em>C. briggsae</em>
 - embryo_time - The estimated age of the embryo from which the cell was drawn. See Packer and Qin et al., 2019 for more details on how this was caluclated. <em>C. briggsae</em> embryo_time was estimated using the orthologous genes between the species.
 - dataset - Which collection batch the cells come from. 
-- n_umi - 
-- genotype
-- potential_low_quality_cell
-- high_background
-- possible_doublet
-- packer_cell_type
-- packer_cell_subtype
-- packer_plot_cell_type
-- SizeFactor
-- smoothed_embryo_time
-- embryo_time_bin
-- Gene Expression
+- n_umi - The number of UMI collapsed sequencing reads associated with that cell.
+- genotype - The genotype from which the cell came from. Some of the _C. elegans_ cells are from mutant animals. 
+  - Wild-type _C. elegans_: N2 and VC2010
+  - Wild-type _C. briggsae_: AF16
+  - Mutant _C. elegans_ for mec-3: VC2396 mec-3(gk1126) IV
+  - Mutant _C. elegans_ for M03D4.4: VC4183 M03D4.4(gk5269[loxP + myo-2p::GFP::unc-54 3' UTR + rps-27p::neoR::unc-54 3' UTR + loxP]) IV
+  - Mutant _C. elegans_ for ceh-9: YL633 ceh-9(tm2747)
+- potential_low_quality_cell - Using a variety of manual annotation of the data, some cells appear as a mixture of possible doublets, 
+- high_background - The amount of background reads was estimated for every cell similar to Packer and Qin et al., 2019. The cells labeled here as TRUE had a fraction of reads from background higher than 0.75.
+- possible_doublet - Droplets that annotated as possibly containing two or more cells. Not all cells annotated as possible droplets are such.
+- packer_cell_type - Cell type annotation from Packer and Qin et al., 2019.
+- packer_cell_subtype - Cell type annotation from Packer and Qin et al., 2019.
+- packer_plot_cell_type - Cell type annotation from Packer and Qin et al., 2019.
+- SizeFactor - A column used to estimate the library size.
+- smoothed_embryo_time - The estimated embryo time calculated as above, with an additional nearest neighbor smoothing algorithm to use the neighobring cell's embryo time and transcriptome to better approximate the age of the embryo.
+- embryo_time_bin - Binned smoothed embryo time with lt_100 meaning 'less than 100' and gt_710 meaning 'greater than 710.
+- Gene Expression - Used to inspect gene expression.
 </p>
 </details>
 
+<details>
+           <summary>Cell Summary Information</summary>
+<p>
+ <p>
 
-### Cell Summary Info:
- 1. The relative TPM of every gene in elegans and briggsae
- 2. A barplot of the cell type markers for that cell type using the WormCat gene categories as a descriptor
- 3. The top cell type markers that are shared (black outline), private to elegans (green), or private to briggsae (blue)
- 4. A bunch of cell type metrics, where the values for that cell type are shown in green for elegans and blue for briggsae (red for both) ontop of the dataset wide distribution
+ Included in this download are summaries of every cell type, describing how the cell types differ between _C. elegans_ and _C. briggsae_. Below is an example plot for the ASG neuron:
+ 
+ 1. The relative TPM of every gene in elegans and briggsae.
+ 2. A barplot of the cell type markers for that cell type using the WormCat gene categories as a descriptor.
+ 3. The top cell type markers that are shared (black outline), private to elegans (green), or private to briggsae (blue). The private markers can also include genes that weren't annotated as being directly orthologous between the species.
+ 4. A bunch of cell type metrics, where the values for that cell type are shown in green for elegans and blue for briggsae (red for both) ontop of the dataset wide distribution.
   - Cell count: number of cells in the dataset
   - Gini coeficient: A measure of inequality that shows how evenly distributed the TPM values are (0 = even, 1 = skewed)
   - The number of genes ‘detected’ in that cell type. Calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0
@@ -108,12 +121,10 @@ cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
   - Jensen-Shannon Distance: Metric of distance between the two species cell transcriptomes
   - Pearson Correlation: Metric of similarity between the two species cell transcriptomes
   - The number of differentially expressed genes between the species
-
-
-<details>
-           <summary>Cell Plot Example</summary>
-           <p>Content 1 Content 1 Content 1 Content 1 Content 1</p>
+</p>
+</p>
 </details>
+
 
 ### Gene Summary Info:
  1. The relative TPM of every gene in elegans and briggsae
