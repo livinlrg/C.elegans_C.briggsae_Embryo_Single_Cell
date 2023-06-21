@@ -54,7 +54,6 @@ library(VisCello) # load
 cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 ```
 
-
 <details>
            <summary>VisCello Information</summary>
 <p>
@@ -65,7 +64,7 @@ cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 
  #### Summary:
 <p>
- Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, cell class subsets, and time subsets. All of the joint projections are generated using Seurat V4 CCA. Additionally, we have included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are on their own in the same space as the joint projections.
+ Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, cell class subsets, and time subsets. All of the joint projections are generated using Seurat V4 CCA. We have also included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are displayed on their own in the same UMAP embeddings.
 </p>
 
 <p>
@@ -99,6 +98,7 @@ The genes are labeled with the gene name, sequence name, and WBGene name from th
 - smoothed_embryo_time - The estimated embryo time calculated as above, with an additional nearest neighbor smoothing algorithm to use the neighobring cell's embryo time and transcriptome to better approximate the age of the embryo.
 - embryo_time_bin - Binned smoothed embryo time with lt_100 meaning 'less than 100' and gt_710 meaning 'greater than 710.
 - Gene Expression - Used to inspect gene expression.
+---
 </p>
 </details>
 
@@ -121,19 +121,50 @@ The genes are labeled with the gene name, sequence name, and WBGene name from th
   - Jensen-Shannon Distance: Metric of distance between the two species cell transcriptomes
   - Pearson Correlation: Metric of similarity between the two species cell transcriptomes
   - The number of differentially expressed genes between the species
+---
 </p>
 </p>
 </details>
 
+</p>
+</details>
 
-### Gene Summary Info:
+<details>
+           <summary>Gene Summary Information: </summary>
+<p>
+ <p>
+
  1. The relative TPM of every gene in elegans and briggsae
  2. A barplot of the cell type markers for that cell type using the WormCat gene categories as a descriptor
  3. The top cell type markers that are shared (black outline), private to elegans (green), or private to briggsae (blue)
  4. A bunch of cell type metrics, where the values for that cell type are shown in green for elegans and blue for briggsae (red for both) ontop of the dataset wide distribution
   - Cell count: number of cells in the dataset
   - Gini coeficient: A measure of inequality that shows how evenly distributed the TPM values are (0 = even, 1 = skewed)
+---
+</p>
+</p>
+</details>
 
-### TPM tables:
 
-### Cell-marker tables:
+<details>
+           <summary>TPM Tables Information: </summary>
+<p>
+ <p>
+  
+
+---
+</p>
+</p>
+</details>
+
+<details>
+           <summary>Cell-type marker table Information: </summary>
+<p>
+ <p>
+  
+
+---
+</p>
+</p>
+</details>
+
