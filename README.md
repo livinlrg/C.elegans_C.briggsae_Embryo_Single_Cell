@@ -28,12 +28,12 @@ Due to large data file currently being hosted on Git LFS, you cannot use git clo
 ```
 brew install git-lfs
 git lfs install
-git-lfs clone https://github.com/qinzhu/VisCello.celegans.git
+git lfs clone https://github.com/livinlrg/C.elegans_C.briggsae_Embryo_Single_Cell.git
 ```
 ```
 conda install -c conda-forge git-lfs
 git lfs install
-git-lfs clone https://github.com/qinzhu/VisCello.celegans.git
+git lfs clone https://github.com/livinlrg/C.elegans_C.briggsae_Embryo_Single_Cell.git
 ```
 
  3. Clone the github repository using this command in terminal:
