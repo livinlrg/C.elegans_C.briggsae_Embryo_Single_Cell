@@ -53,10 +53,47 @@ devtools::install_github("qinzhu/VisCello") # install
 library(VisCello) # load
 cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 ```
+
+
 <details>
-           <summary>VisCello Example</summary>
-           <p>Content 1 Content 1 Content 1 Content 1 Content 1</p>
+           <summary>VisCello Information</summary>
+<p>
+
+<p align="center">
+  <img width="800" src=/Example_Images/VisCelloExample.png>
+</p>
+
+ #### Summary:
+<p>
+ Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, cell class subsets, and time subsets. All of the joint projections are generated using Seurat V4 CCA. Additionally, we have included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are on their own in the same space as the joint projections.
+</p>
+
+<p>
+ In addition to viewing expression, you can visualize the cell identity and other metadata that we have annotated using orthologous markers between <em>C. elegans</em> and <em>C. briggsae</em>. The information about these metadata columns is below.
+</p>
+ 
+
+#### Meta Data:
+- lineage - Manually annotated cellular lineage. For ambiguities in division orientation, an x is used (e.g. MSx to refer to MSa and MSp).
+- cell_type - Manually annotated terminal cell type identity. 
+- species - Whether the cell is from <em>C. elegans</em> or <em>C. briggsae</em>
+- embryo_time - The estimated age of the embryo from which the cell was drawn. See Packer and Qin et al., 2019 for more details on how this was caluclated. <em>C. briggsae</em> embryo_time was estimated using the orthologous genes between the species.
+- dataset - Which collection batch the cells come from. 
+- n_umi - 
+- genotype
+- potential_low_quality_cell
+- high_background
+- possible_doublet
+- packer_cell_type
+- packer_cell_subtype
+- packer_plot_cell_type
+- SizeFactor
+- smoothed_embryo_time
+- embryo_time_bin
+- Gene Expression
+</p>
 </details>
+
 
 ### Cell Summary Info:
  1. The relative TPM of every gene in elegans and briggsae
