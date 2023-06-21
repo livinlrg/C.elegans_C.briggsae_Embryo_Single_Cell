@@ -1,16 +1,18 @@
 # _C. elegans_ and _C. briggsae_ Embryo Single-Cell Dataset
 Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Junhyong Kim, John I. Murray, and Robert Waterston
 
-In anticipation of our upcoming manuscript describing a comparitive analysis of single-cells from _C. elegans_ and _C. briggsae_ embryogenesis, we are releasing multiple forms of data summaries that we hope will be useful to the community.
+In anticipation of our upcoming manuscript describing a comparitive analysis of homologous cell-types between _C. elegans_ and _C. briggsae_ accross embryogenesis using single-cell RNA-sequencing, we are releasing an accessible collection of data summaries on the homologous genes and cell-types between these species.
 
 __Preprint: [Link upcoming]__
 
-The avaliable data are:
+
+The avaliable data are as follows. A detailed description of these data is below in dropdown menus.
  - A VisCello Object
  - Cell-type summaries (Both visual descriptions and tables)
  - Gene summaries (Both visual descriptions and tables)
  - Gene expression (TPM) tables
  - Cell-marker tables
+
 
 ### How to download:
 Due to large data file currently being hosted on Git LFS, you cannot use git clone to download these files. Please follow the instructions below below to download the dataset in its entirety:
