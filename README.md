@@ -1,7 +1,7 @@
 # _C. elegans_ and _C. briggsae_ Embryo Single-Cell Dataset
 Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Junhyong Kim, John I. Murray, and Robert Waterston
 
-In anticipation of our upcoming manuscript describing a comparitive analysis of homologous cell-types between _C. elegans_ and _C. briggsae_ accross embryogenesis using single-cell RNA-sequencing, we are releasing an accessible collection of data summaries on the homologous genes and cell-types between these species.
+In anticipation of our upcoming manuscript describing a comparative analysis of homologous cell-types between _C. elegans_ and _C. briggsae_ across embryogenesis using single-cell RNA-sequencing, we are releasing an accessible collection of data summaries on the homologous genes and cell-types between these species.
 
 __Preprint: [Link upcoming]__
 
@@ -15,7 +15,7 @@ The avaliable data are as follows. A detailed description of these data is below
 
 
 ### How to download:
-Due to large data file currently being hosted on Git LFS, you cannot use git clone to download these files. Please follow the instructions below below to download the dataset in its entirety:
+Due to how large the data files are, they are currently being hosted on Git LFS (Large File Service). This means you cannot use the default git clone to download these files. Instead, you will need to use git LFS. Please follow the instructions below below to download the dataset in its entirety:
 
  1. Install git from:
  * Windows: <https://gitforwindows.org/>
