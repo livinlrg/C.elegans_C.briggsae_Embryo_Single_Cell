@@ -15,7 +15,7 @@ The avaliable data are as follows. A detailed description of these data is below
 
 
 ### How to download:
-Due to how large the data files are, they are currently being hosted on Git LFS (Large File Service). This means you cannot use the default git clone to download these files. Instead, you will need to use git LFS. Please follow the instructions below below to download the dataset in its entirety:
+Due to how large the data files are, they are currently being hosted on Git LFS (Large File Service). This means you cannot use the default git clone to download these files. Instead, you will need to use git LFS. If the use of terminal commands proves too inaccessible, it is also feasible to download individual files of interest using githubs web browser. Please follow the instructions below below to download the dataset in its entirety:
 
  1. Install git from:
  * Windows: <https://gitforwindows.org/>
@@ -66,33 +66,33 @@ cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 
  #### Summary:
 <p>
- Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, cell class subsets, and time subsets. All of the joint projections are generated using Seurat V4 CCA. We have also included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are displayed in their own in the same UMAP embeddings.
+ Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, of individual cell class subsets, and of embryo time subsets. All of the joint projections are generated using Seurat V4 CCA. We have also included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are displayed on their own in the same UMAP embeddings.
 </p>
 
 <p>
-You can search for your favorite gene by looking up the gene name, the sequence name, or the WBGene name from either of the species.
+You can search for your favorite gene from either of the species by looking up the gene name, the sequence name, or the WBGene name.
 </p>
 
 <p>
- In addition to viewing expression, you can also visualize the cell identity and other metadata that we have annotated using orthologous markers between <em>C. elegans</em> and <em>C. briggsae</em>. The information about these metadata columns is below.
+ In addition to viewing expression, you can also visualize the cell identity and other metadata that we have annotated using the orthologous markers between <em>C. elegans</em> and <em>C. briggsae</em>. The information about these metadata columns is below.
 </p>
  
 #### Meta Data:
-- lineage - Manually annotated cellular lineage. For ambiguities in division orientation, an x is used (e.g. MSx to refer to MSa and MSp).
+- lineage - The manually annotated cell lineage. For ambiguities in division orientation, an x is used (e.g. MSx to refer to MSa and MSp).
 - cell_type - The terminal cell-type identities, manually annotated using homologous marker genes. 
 - species - Whether the cell is from <em>C. elegans</em> or <em>C. briggsae</em>
 - embryo_time - The estimated age of the embryo from which the cell was drawn. See Packer and Zhu et al., 2019 for more details on how this was caluclated. <em>C. briggsae</em> embryo_time was estimated using the orthologous genes between the species.
 - dataset - Which collection batch the cells come from. 
-- n_umi - The number of UMI collapsed sequencing reads associated with that cell.
-- genotype - The genotype from which the cell came from. Some of the _C. elegans_ cells are from mutant animals. 
+- n_umi - The number of UMI-collapsed sequencing reads that are associated with the cell.
+- genotype - The genotype from which the cell came from. Some of the _C. elegans_ cells are from mutant animals.
   - Wild-type _C. elegans_: N2 and VC2010
   - Wild-type _C. briggsae_: AF16
   - Mutant _C. elegans_ for mec-3: VC2396 mec-3(gk1126) IV
   - Mutant _C. elegans_ for M03D4.4: VC4183 M03D4.4(gk5269[loxP + myo-2p::GFP::unc-54 3' UTR + rps-27p::neoR::unc-54 3' UTR + loxP]) IV
   - Mutant _C. elegans_ for ceh-9: YL633 ceh-9(tm2747)
-- potential_low_quality_cell - Using a variety of manual annotation of the data, some cells appear as a mixture of possible doublets, 
+- potential_low_quality_cell - Using a variety of manual annotation stratagies, we have identified some cells that don't behave consistently across UMAP embeddings due to a variety of techincal reasons. These have been left in the dataset as they often represent 'normal cells', but have been labeled as being potentially low-quality.
 - high_background - The amount of background reads was estimated for every cell similar to Packer and Zhu et al., 2019. The cells labeled here as TRUE had a fraction of reads from background higher than 0.75.
-- possible_doublet - Droplets that annotated as possibly containing two or more cells. Not all cells annotated as possible droplets are such.
+- possible_doublet - Droplets that annotated as possibly containing two or more cells. Not all cells annotated as possible droplets are as such. Please see Packer and Zhu et al., 2019 for details on how the background was estimated.
 - packer_cell_type - Cell type annotation from Packer and Zhu et al., 2019.
 - packer_cell_subtype - Cell type annotation from Packer and Zhu et al., 2019.
 - packer_plot_cell_type - Cell type annotation from Packer and Zhu et al., 2019.
