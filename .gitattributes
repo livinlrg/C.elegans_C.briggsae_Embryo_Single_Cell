@@ -1,2 +1,4 @@
 eset.rds filter=lfs diff=lfs merge=lfs -text
 Cello/eset.rds filter=lfs diff=lfs merge=lfs -text
+TPM_Tables/** filter=lfs diff=lfs merge=lfs -text
+Example_Images/** filter=lfs diff=lfs merge=lfs -text
