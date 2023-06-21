@@ -66,22 +66,22 @@ cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 
  #### Summary:
 <p>
- Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, cell class subsets, and time subsets. All of the joint projections are generated using Seurat V4 CCA. We have also included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are displayed on their own in the same UMAP embeddings.
+ Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, cell class subsets, and time subsets. All of the joint projections are generated using Seurat V4 CCA. We have also included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are displayed in their own in the same UMAP embeddings.
 </p>
 
 <p>
-The genes are labeled with the gene name, sequence name, and WBGene name from their respective species. Searching for any of these gene name types will pull up your query.
+You can search for your favorite gene by looking up the gene name, the sequence name, or the WBGene name from either of the species.
 </p>
 
 <p>
- In addition to viewing expression, you can visualize the cell identity and other metadata that we have annotated using orthologous markers between <em>C. elegans</em> and <em>C. briggsae</em>. The information about these metadata columns is below.
+ In addition to viewing expression, you can also visualize the cell identity and other metadata that we have annotated using orthologous markers between <em>C. elegans</em> and <em>C. briggsae</em>. The information about these metadata columns is below.
 </p>
  
 #### Meta Data:
 - lineage - Manually annotated cellular lineage. For ambiguities in division orientation, an x is used (e.g. MSx to refer to MSa and MSp).
-- cell_type - Manually annotated terminal cell type identity. 
+- cell_type - The terminal cell-type identities, manually annotated using homologous marker genes. 
 - species - Whether the cell is from <em>C. elegans</em> or <em>C. briggsae</em>
-- embryo_time - The estimated age of the embryo from which the cell was drawn. See Packer and Qin et al., 2019 for more details on how this was caluclated. <em>C. briggsae</em> embryo_time was estimated using the orthologous genes between the species.
+- embryo_time - The estimated age of the embryo from which the cell was drawn. See Packer and Zhu et al., 2019 for more details on how this was caluclated. <em>C. briggsae</em> embryo_time was estimated using the orthologous genes between the species.
 - dataset - Which collection batch the cells come from. 
 - n_umi - The number of UMI collapsed sequencing reads associated with that cell.
 - genotype - The genotype from which the cell came from. Some of the _C. elegans_ cells are from mutant animals. 
@@ -91,11 +91,11 @@ The genes are labeled with the gene name, sequence name, and WBGene name from th
   - Mutant _C. elegans_ for M03D4.4: VC4183 M03D4.4(gk5269[loxP + myo-2p::GFP::unc-54 3' UTR + rps-27p::neoR::unc-54 3' UTR + loxP]) IV
   - Mutant _C. elegans_ for ceh-9: YL633 ceh-9(tm2747)
 - potential_low_quality_cell - Using a variety of manual annotation of the data, some cells appear as a mixture of possible doublets, 
-- high_background - The amount of background reads was estimated for every cell similar to Packer and Qin et al., 2019. The cells labeled here as TRUE had a fraction of reads from background higher than 0.75.
+- high_background - The amount of background reads was estimated for every cell similar to Packer and Zhu et al., 2019. The cells labeled here as TRUE had a fraction of reads from background higher than 0.75.
 - possible_doublet - Droplets that annotated as possibly containing two or more cells. Not all cells annotated as possible droplets are such.
-- packer_cell_type - Cell type annotation from Packer and Qin et al., 2019.
-- packer_cell_subtype - Cell type annotation from Packer and Qin et al., 2019.
-- packer_plot_cell_type - Cell type annotation from Packer and Qin et al., 2019.
+- packer_cell_type - Cell type annotation from Packer and Zhu et al., 2019.
+- packer_cell_subtype - Cell type annotation from Packer and Zhu et al., 2019.
+- packer_plot_cell_type - Cell type annotation from Packer and Zhu et al., 2019.
 - SizeFactor - A column used to estimate the library size.
 - smoothed_embryo_time - The estimated embryo time calculated as above, with an additional nearest neighbor smoothing algorithm to use the neighobring cell's embryo time and transcriptome to better approximate the age of the embryo.
 - embryo_time_bin - Binned smoothed embryo time with lt_100 meaning 'less than 100' and gt_710 meaning 'greater than 710.
@@ -109,7 +109,7 @@ The genes are labeled with the gene name, sequence name, and WBGene name from th
 <p>
  <p>
 
- Included in this download are summaries of every cell type, describing how the cell types differ between _C. elegans_ and _C. briggsae_. Below is an example plot for the ASG neuron:
+ The cell-type summaries avaliable in the cell_plots/ directory describe how the cell-types differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for the ASG neuron:
  
  1. The relative TPM of every gene in elegans and briggsae.
  2. A barplot of the cell type markers for that cell type using the WormCat gene categories as a descriptor.
@@ -135,13 +135,10 @@ The genes are labeled with the gene name, sequence name, and WBGene name from th
            <summary>Gene Summary Information: </summary>
 <p>
  <p>
+The gene summaries avaliable in the gene_plots/ directory describe how the gene expression profiles differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for pha-4:
 
- 1. The relative TPM of every gene in elegans and briggsae
- 2. A barplot of the cell type markers for that cell type using the WormCat gene categories as a descriptor
- 3. The top cell type markers that are shared (black outline), private to elegans (green), or private to briggsae (blue)
- 4. A bunch of cell type metrics, where the values for that cell type are shown in green for elegans and blue for briggsae (red for both) ontop of the dataset wide distribution
-  - Cell count: number of cells in the dataset
-  - Gini coeficient: A measure of inequality that shows how evenly distributed the TPM values are (0 = even, 1 = skewed)
+To be filled in
+ 
 ---
 </p>
 </p>
@@ -153,6 +150,7 @@ The genes are labeled with the gene name, sequence name, and WBGene name from th
 <p>
  <p>
   
+To be filled in
 
 ---
 </p>
@@ -164,6 +162,7 @@ The genes are labeled with the gene name, sequence name, and WBGene name from th
 <p>
  <p>
   
+To be filled in
 
 ---
 </p>
