@@ -149,9 +149,9 @@ To be filled in
            <summary>TPM Tables Information: </summary>
 <p>
  <p>
-  
-To be filled in
 
+Avaliable here is the expression value of every gene in the _C. elegans_ and _C. briggsae_ genome, summarized as the transcripts per million (TPM) on pseudobulked progenitor and terminal cell-types. To evaluate the variation in the measurement of these TPM values, we have used bootstrapping to take samples of the cells and generate several confidence intervals on the cellular expression values. A gene can be thought of as confidently detected in that cell-type if its lower 95% confidence interval does not intersect zero. Additionally, we have assessed the percentage of cells from that cell-type that we were able to detect expression from.
+ 
 ---
 </p>
 </p>
