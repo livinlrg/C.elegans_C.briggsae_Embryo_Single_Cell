@@ -1,5 +1,5 @@
 # _C. elegans_ and _C. briggsae_ Embryo Single-Cell Dataset
-Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Junhyong Kim, John I. Murray, and Robert Waterston
+Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Chau Huynh, Junhyong Kim, John I. Murray, and Robert Waterston
 
 In anticipation of our upcoming manuscript describing a comparative analysis of homologous cell-types between _C. elegans_ and _C. briggsae_ across embryogenesis using single-cell RNA-sequencing, we are releasing an accessible collection of data summaries on the homologous genes and cell-types between these species.
 
@@ -87,9 +87,9 @@ You can search for your favorite gene from either of the species by looking up t
 - genotype - The genotype from which the cell came from. Some of the _C. elegans_ cells are from mutant animals.
   - Wild-type _C. elegans_: N2 and VC2010
   - Wild-type _C. briggsae_: AF16
-  - Mutant _C. elegans_ for mec-3: VC2396 mec-3(gk1126) IV
-  - Mutant _C. elegans_ for M03D4.4: VC4183 M03D4.4(gk5269[loxP + myo-2p::GFP::unc-54 3' UTR + rps-27p::neoR::unc-54 3' UTR + loxP]) IV
-  - Mutant _C. elegans_ for ceh-9: YL633 ceh-9(tm2747)
+  - Mutant _C. elegans_ for mec-3: VC2396 mec-3(gk1126). Mutants for mec-3 appear to be missing their touch neurons and markers of the touch neurons are not detected.
+  - Mutant _C. elegans_ for M03D4.4: VC4183 M03D4.4(gk5269[loxP + myo-2p::GFP::unc-54 3' UTR + rps-27p::neoR::unc-54 3' UTR + loxP]). This mutant strain for M03D4.4 appears otherwise wild-type in cell composition and expression.
+  - Mutant _C. elegans_ for ceh-9: YL633 ceh-9(tm2747). This mutant strain for ceh-9 appears otherwise wild-type in cell composition and expression.
 - potential_low_quality_cell - Using a variety of manual annotation stratagies, we have identified some cells that don't behave consistently across UMAP embeddings due to a variety of techincal reasons. These have been left in the dataset as they often represent 'normal cells', but have been labeled as being potentially low-quality.
 - high_background - The amount of background reads was estimated for every cell similar to Packer and Zhu et al., 2019. The cells labeled here as TRUE had a fraction of reads from background higher than 0.75.
 - possible_doublet - Droplets that annotated as possibly containing two or more cells. Not all cells annotated as possible droplets are as such. Please see Packer and Zhu et al., 2019 for details on how the background was estimated.
