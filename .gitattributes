@@ -2,3 +2,4 @@ eset.rds filter=lfs diff=lfs merge=lfs -text
 Cello/eset.rds filter=lfs diff=lfs merge=lfs -text
 TPM_Tables/** filter=lfs diff=lfs merge=lfs -text
 Example_Images/** filter=lfs diff=lfs merge=lfs -text
+Summary_Tables/TerminalCellType_DEG_elegans_to_briggsae.txt filter=lfs diff=lfs merge=lfs -text
