@@ -110,7 +110,7 @@ You can search for your favorite gene from either of the species by looking up t
 <p>
  <p>
 
- The cell-type summaries avaliable in the cell_plots/ directory describe how the cell-types differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for the ASG neuron:
+ The cell-type summaries avaliable in the cell_plots/ directory describe how the cell-types differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The data underlying the cell-types data is avaliable in cell_data.txt for the terminal cell-types. The description of what is included in these summaries are below with an example plot for the ASG neuron:
 
  <p align="center">
   <img width="800" src=/Example_Images/ExampleASGNeuron.png>
@@ -128,6 +128,53 @@ You can search for your favorite gene from either of the species by looking up t
   - Jensen-Shannon Distance: Metric of distance between the two species cell transcriptomes.
   - Pearson Correlation: Metric of similarity between the two species cell transcriptomes.
   - The number of differentially expressed genes between the species.
+
+   ### The description of the cell_data.txt file is below:
+   - cell-type - The name of the cell type.
+   - jsd_median - The median Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - jsd_lower - The lower 95% confidence-interval of the Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - jsd_upper - The upper 95% confidence-interval of the Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+ - corr_median - The median pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+ - corr_lower - The lower 95% confidence-interval of the Pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+ - corr_upper - The upper 95% confidence-interval of the Pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+ - cell_class - The tissue subset the cell is a part of.
+ - neuron_type - The neuron-type as described in the L4 connectome.
+ - n.umi - Mean number of UMI of the cells across both species.
+ - elegans_gini - _C. elegans_ gini coefficient, calculated on the psuedobulked TPM.
+ - briggsae_gini - _C. briggsae_ gini coefficient, calculated on the psuedobulked TPM.
+ - elegans_genes_detected_0.05 - Number of genes detected using trinarization at 5% prior for percentage of cells genes detected in
+ - elegans_genes_detected_0.10 - Number of genes detected using trinarization at 10% prior for percentage of cells genes detected in
+ - elegans_genes_maybe_0.05 - Number of genes maybe detected using trinarization at 5% prior for percentage of cells genes detected in
+ - elegans_genes_maybe_0.10 - Number of genes maybe detected using trinarization at 10% prior for percentage of cells genes detected in
+ - elegans_genes_ci_detected - Number of genes detected using binarization using the 95% CI on bootstrapped TPM
+ - elegans_cell_count - Cell count
+ - briggsae_detected_0.05 - Number of genes detected using trinarization at 5% prior for percentage of cells genes detected in
+ - briggsae_detected_0.10 - Number of genes detected using trinarization at 10% prior for percentage of cells genes detected in
+ - briggsae_maybe_0.05 - Number of genes maybe detected using trinarization at 5% prior for percentage of cells genes detected in
+ - briggsae_maybe_0.10 - Number of genes maybe detected using trinarization at 10% prior for percentage of cells genes detected in
+ - briggsae_ci_detected - Number of genes detected using binarization using the 95% CI on bootstrapped TPM
+ - briggsae_cell_count - Cell count
+ - both_detected_0.05 - Union of number of genes detected using trinarization at 5% prior for percentage of cells genes detected in
+ - both_maybe_0.05 - Union of number of genes detected using trinarization at 10% prior for percentage of cells genes detected in
+ - both_ci_detected - Union of number of genes detected using trinarization at 5% prior for percentage of cells genes detected in
+ - either_detected_0.05 - Number of genes detected using trinarization at 5% prior for percentage of cells genes detected in for either species
+ - either_maybe_0.05 - Number of genes detected using trinarization at 10% prior for percentage of cells genes detected in for either species
+ - either_ci_detected - Number of genes  detected using binarization using the 95% CI on bootstrapped TPM in either species
+ - btwn_species_dge - How many differentially expressed between homologous cell type between elegans and briggsae
+ - filter_out - Should be filtered ==TRUE
+ - deg_over_expressed_0.05 - How many differentially expressed between homologous cell type between elegans and briggsae over number of genes detected at 5% prior
+ - deg_over_expressed_0.10 - How many differentially expressed between homologous cell type between elegans and briggsae over number of genes detected at 10% prior
+ - deg_over_expressed_boot - How many differentially expressed between homologous cell type between elegans and briggsae over number of genes detected  using bootstrap binarization
+ - ele_markers - Number of elegans markers
+ - bri_markers - Number of briggsae markers
+ - shared_markers - Number of shared markers
+ - either_markers - Union of number of markers 
+ - ele_markers_common - Number of markers in 1:1 orthology set
+ - bri_markers_common - Number of markers in 1:1 orthology set
+ - ele_markers_private - Number of markers that are private to elegans
+ - bri_markers_private - Number of markers that are private to briggsae
+ - either_markers_common - Union of number of markers using only 1:1 orthology set
+
 ---
 </p>
 </p>
