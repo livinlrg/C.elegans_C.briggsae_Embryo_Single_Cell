@@ -172,11 +172,81 @@ Avaliable here is the expression value of every gene in the _C. elegans_ and _C.
 </details>
 
 <details>
-           <summary>Cell-type marker table Information: </summary>
+           <summary>Differentially expressed-genes between species: </summary>
 <p>
  <p>
   
-To be filled in
+To identify genes differentially expressed between _C. elegans_ and _C. briggsae_ within the homologous cell-types, we used Seurat V4. A Wilcoxon Rank Sum test was run between the cells of that cell-type from _C. elegans_ against the cells of that cell-type from _C. briggsae_. The data have been filtered for an adjusted p-value less than 0.05 and a log2 fold-change of greater than 1 or less than -1. The columns in the table are as below:
+
+ - p_val - The unadjusted p-value between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
+ - avg_log2FC_elegans_to_briggsae - The log2 fold-change between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
+ - elegans_cell_fraction - The fraction of cells for which this gene was detected in _C. elegans_.
+ - briggsae_cell_fraction - The fraction of cells for which this gene was detected in _C. briggsae_.
+ - p_val_adj- The adjusted p-value between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
+ - gene - The gene that was tested for its differential expression.
+ - cell_type - The cell-type in which the gene was tested for its differential expression.
+ - elegansTPM - The TPM of that gene in that cell-type.
+ - elegansMaxTPM - The maximum TPM of that gene in any cell-type.
+ - elegansMeanTPM - The average TPM of that gene across the cell-types.
+ - elegansNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
+ - elegansNumberCellTypesDetectedIn_0.10 - TThe number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
+ - elegansNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
+ - briggsaeTPM - The TPM of that gene in that cell-type.
+ - briggsaeMaxTPM - The maximum TPM of that gene in any cell-type.
+ - briggsaeMeanTPM - The average TPM of that gene across the cell-types.
+ - briggsaeNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
+ - briggsaeNumberCellTypesDetectedIn_0.10 - The number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
+ - briggsaeNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
+ - elegansTau - The broadness of the gene expression pattern.
+ - briggsaeTau - The broadness of the gene expression pattern.
+
+---
+</p>
+</p>
+</details>
+
+<details>
+           <summary>Cell-type marker table information: </summary>
+<p>
+ <p>
+  
+To identify genes that are specific to certain cell-types in _C. elegans_ and _C. briggsae_, marker genes were called in both species using Seurat V4. In practice a Wilcoxon Rank Sum test is run between all of the cells of that cell-type against the rest of the dataset to find genes that are significantly enriched in the cell-type. The data have been filtered for an adjusted p-value less than 0.05 and a log2 fold-change of greater than 1 between the cell-type and the dataset. This was calculated for both of the species in the dataset on the terminal cell-types. The columns in the table are as below:
+
+ - p_val.species - The unadjusted p-value between the cells of that cell-type and the cells of rest of the dataset for that species.
+ - avg_log2FC.species - The log2 fold-change between the cells of that cell-type and the cells of rest of the dataset for that species.
+ - pct.1.species - The fraction of cells for which this gene was detected in that cell-type for that species.
+ - pct.2.species - The fraction of cells for which this gene was detected in the rest of the cells in the dataset for that species.
+ - p_val_adj.species - The adjusted p-value between the cells of that cell-type and the cells of rest of the dataset for that species.
+ - cell-type - The cell-type in which the gene was tested for its marker status.
+ - gene - The gene that was tested for its marker status.
+ - p_val.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
+ - avg_log2FC.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
+ - pct.1.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
+ - pct.2.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
+ - p_val_adj.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
+ - elegansTPM - The TPM of that gene in that cell-type.
+ - elegansMaxTPM - The maximum TPM of that gene in any cell-type.
+ - elegansMeanTPM - The average TPM of that gene across the cell-types.
+ - elegansNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
+ - elegansNumberCellTypesDetectedIn_0.10 - TThe number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
+ - elegansNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
+ - briggsaeTPM - The TPM of that gene in that cell-type.
+ - briggsaeMaxTPM - The maximum TPM of that gene in any cell-type.
+ - briggsaeMeanTPM - The average TPM of that gene across the cell-types.
+ - briggsaeNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
+ - briggsaeNumberCellTypesDetectedIn_0.10 - The number of cell-types that gene was confidently detected in using a trinirization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
+ - briggsaeNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
+ - elegansTau - The broadness of the gene expression pattern.
+ - briggsaeTau - The broadness of the gene expression pattern.
+ - InOtherSpecies - Whether this gene marker is also a marker in the other species.
+ - orthologous_gene - Whether the gene was found to be orthologous between the two species by WormBase and a synteny recovery method.
+ - elegansSinglet - Whether the gene was found as a 1:x ortholog in _C. elegans_ by OrthoFinder.
+ - briggsaeSinglet - Whether the gene was found as a 1:x ortholog in _C. briggsae by OrthoFinder.
+ - orthogroupSize - The size of the orthogroup (number of genes in that 'family').
+ - orthogroupName - The name of the orthogroup (for internal use).
+ - WormCat.1 - The WormCat category of this gene at a tier one level.
+ - WormCat.2 - The WormCat category of this gene at a tier two level.
+ - WormCat.3 - The WormCat category of this gene at a tier three level.
 
 ---
 </p>
