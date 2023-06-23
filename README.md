@@ -140,9 +140,18 @@ You can search for your favorite gene from either of the species by looking up t
            <summary>Gene Summary Information: </summary>
 <p>
  <p>
-The gene summaries avaliable in the gene_plots/ directory describe how the gene expression profiles differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for pha-4:
+The gene summaries that will become avaliable in the gene_plots/ directory describe how the gene expression profiles differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for pha-4:
 
-To be filled in
+ 1. Global UMAP showing the expression of your gene of interest. 
+ 2. Cell subset UMAP showing the expression of your gene of interest. The choice of which UMAP is shown is based on which cell-type shows maximum expression across all cell-types between the two species.
+ 3. Terminal cell-type comparative TPM values shown in log2 space. The cell-types are summarized by their cell class.
+ 4. Progenitor cell-type comparative TPM values shown in log2 space. The progenitors are summarized by their general lineage type.
+ 5. A bunch of gene metrics, where the values for this gene is shown in red as a confidence interval (CI) range on top of the dataset wide distribution. These metrics are shown for the terminal and progenitor cell-types.
+  - Gene expression patern distance shown as the Jensen-Shannon Distance (JSD) calculated on the bootstrapped TPM values. The CI and median for the gene JSD was calculated on the bootstrap resampled TPM values.
+  - Gene expression patern distance shown as the Pearson correlation coefficient calculated on the bootstrapped TPM values. The CI and median for the gene Pearson correlation coefficient was calculated on the bootstrap resampled TPM values.
+  - The broadness of gene expression pattern shown as the Tau value for _C. elegans_.
+  - The broadness of gene expression pattern shown as the Tau value for _C. briggsae_.
+  - The maximum TPM value across any cell-type in both species.
  
 ---
 </p>
