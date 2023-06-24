@@ -1,5 +1,5 @@
 # _C. elegans_ and _C. briggsae_ Embryo Single-Cell Dataset
-Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Chau Huynh, Junhyong Kim, John I. Murray, and Robert Waterston
+Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Chau Huynh, Connor Kubo, Junhyong Kim, John I. Murray, and Robert Waterston
 
 In anticipation of our upcoming manuscript describing a comparative analysis of homologous cell-types between _C. elegans_ and _C. briggsae_ across embryogenesis using single-cell RNA-sequencing, we are releasing an accessible collection of data summaries on the homologous genes and cell-types between these species.
 
