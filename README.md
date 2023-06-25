@@ -189,6 +189,73 @@ You can search for your favorite gene from either of the species by looking up t
  <p>
 The gene summaries in the gene_plots/ directory describe how the gene expression profiles differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for pha-4:
 
+<p align="center">
+  <img width="1200" src=/Example_Images/Example_pha4.png>
+</p>
+
+<details>
+<summary>Cell-types and UMAP Projections</summary>
+
++ <details>
+    <summary>Global UMAP:</summary>
+ 
+     <p align="center">
+  <img width="1200" src=/Example_Images/Global.png>
+    </p>
+   </details>
++ <details>
+   <summary>Progenitor UMAP:</summary>
+ 
+    <p align="center">
+  <img width="600" src=/Example_Images/Early.png>
+    </p>
+   </details>
++ <details>
+   <summary>Ciliated neurons UMAP:</summary>
+ 
+    <p align="center">
+  <img width="600" src=/Example_Images/Ciliated_neurons.png>
+    </p>
+   </details>
++ <details>
+   <summary>Nonciliated neurons UMAP:</summary>
+    <p align="center">
+  <img width="600" src=/Example_Images/Nonciliated_neurons.png>
+    </p>
+   </details>
++ <details>
+   <summary>Hypodermis and seam UMAP:</summary>
+    <p align="center">
+  <img width="600" src=/Example_Images/Hypodermis_seam.png>
+    </p>
+   </details>
++ <details>
+   <summary>Intestine UMAP:</summary>
+    <p align="center">
+  <img width="600" src=/Example_Images/Intestine.png>
+    </p>
+   </details>
++ <details>
+   <summary>Mesoderm UMAP:</summary>
+    <p align="center">
+  <img width="600" src=/Example_Images/Mesoderm.png>
+    </p>
+   </details>
++ <details>
+   <summary>Muscle UMAP:</summary>
+    <p align="center">
+  <img width="600" src=/Example_Images/Muscle.png>
+    </p>
+   </details>
++ <details>
+   <summary>Pharyx glia excretory UMAP:</summary>
+    <p align="center">
+  <img width="600" src=/Example_Images/Pharyx_glia_excretory.png>
+    </p>
+   </details>
+</details>
+
+
  1. Global UMAP showing the expression of your gene of interest. 
  2. Cell subset UMAP showing the expression of your gene of interest. The choice of which UMAP is shown is based on which cell-type shows maximum expression across all cell-types between the two species.
  3. Terminal cell-type comparative TPM values shown in log2 space. The cell-types are summarized by their cell class.
@@ -199,7 +266,6 @@ The gene summaries in the gene_plots/ directory describe how the gene expression
   - The broadness of gene expression pattern shown as the Tau value for _C. elegans_.
   - The broadness of gene expression pattern shown as the Tau value for _C. briggsae_.
   - The maximum TPM value across any cell-type in both species.
- 
 ---
 </p>
 </p>
