@@ -191,7 +191,7 @@ You can search for your favorite gene from either of the species by looking up t
 The gene summaries that will be uploaded in the gene_plots/ directory describe how the gene expression profiles differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for pha-4:
 
 <p align="center">
-  <img width="1200" src=/Example_Images/pha-4.png>
+  <img width="1200" src=/Example_Images/ceh-53.png>
 </p>
 
 <details>
