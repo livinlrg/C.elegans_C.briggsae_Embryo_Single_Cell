@@ -1,9 +1,8 @@
-# _C. elegans_ and _C. briggsae_ Embryo Single-Cell Dataset
-Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Chau Huynh, Connor Kubo, Junhyong Kim, John I. Murray, and Robert Waterston
+# Lineage-resolved analysis of embryonic gene expression evolution in <I>C. elegans</I> and <I>C. briggsae</I>
+Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Chau Huynh, Connor Kubo, Junhyong Kim, Robert Waterston, and John I. Murray
 
-In anticipation of our upcoming manuscript describing a comparative analysis of homologous cell-types between _C. elegans_ and _C. briggsae_ across embryogenesis using single-cell RNA-sequencing, we are releasing an accessible collection of data summaries on the homologous genes and cell-types between these species.
 
-__Preprint: [Link upcoming]__
+__[Preprint Link](https://www.biorxiv.org/content/10.1101/2024.02.03.578695v1)__
 #### For queries about the dataset, please reach out to:
 <p>
     christopher.large [at] pennmedicine.upenn.edu<br>
