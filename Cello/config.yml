@@ -2,5 +2,5 @@ default:
     study_name: "C. elegans and C. briggsae data"
     study_description: "Data from Large et al."
     organism: "cel"
-    feature_name_column: "symbol"
-    feature_id_column: "id"
+    feature_name_column: "gene_short_name"
+    feature_id_column: "gene_short_name"
