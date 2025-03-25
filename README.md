@@ -119,23 +119,25 @@ You can search for your favorite gene from either of the species by looking up t
  The cell-type summaries available in the cell_plots/ directory describe how the cell-types differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The data underlying the cell-types data is available in cell_data.txt for the terminal cell-types. The description of what is included in these summaries are below with an example plot for the ASG neuron:
 
  <p align="center">
-  <img width="800" src=/Example_Images/ExampleASGNeuron.png>
+  <img width="800" src=/Example_Images/ASG.pdf>
 </p>
  
  1. The relative TPM of every gene in _C. elegans_ and _C. briggsae_. Whether a gene is a cell-type marker within that species or both is labeled.
- 2. A barplot of the cell-type markers from _C. elegans_ binned by their WormCat gene category.
+ 2. A barplot of the cell-type markers from _C. elegans_ binned by their WormCat gene category. Ontop is their fold-enrichment and below is their count.
  3. The top cell-type markers that are shared between species (black outline), private to _C. elegans_ (green), or private to _C. briggsae_ (blue). The private markers can also include genes that weren't annotated as being directly orthologous between the species.
  4. A bunch of cell type metrics, where the values for that cell type are shown in green for _C. elegans_ and blue for _C. briggsae_ (red for both) ontop of the dataset wide distribution.
-  - Cell count: number of cells in the dataset
-  - Gini coefficient: A measure of inequality that shows how evenly distributed the TPM values are (0 = even, 1 = skewed)
+  - Cell count: number of cells in the dataset.
   - The number of genes ‘detected’ in that cell type. Calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
-  - How many of the markers of that cell-type are just in one species versus the total markers (shared + private)
+  - The toal number of markers of that cell-type.
+  - How many of the markers of that cell-type are just in one species versus the total markers (shared + private).
+  - Gini coefficient: A measure of inequality that shows how evenly distributed the TPM values are (0 = even, 1 = skewed).
   - The number of UMI-collapsed sequencing reads that are associated with the cell-type.
   - Jensen-Shannon Distance: Metric of distance between the two species cell transcriptomes.
   - Pearson Correlation: Metric of similarity between the two species cell transcriptomes.
+  - Cosine distance: Metric of distance between the two species cell transcriptomes using one minus the cosine angle.
   - The number of differentially expressed genes between the species.
 
-   ### The description of the cell_data.txt file is below:
+   ### The description of the cell_data files is below. The cell data is split into either time bins (cell_data_bins.txt) or means for the time bins (cell_data_mean.txt):
    - cell-type - The name of the cell type.
    - jsd_median - The median Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
    - jsd_lower - The lower 95% confidence-interval of the Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
@@ -207,57 +209,57 @@ The gene summaries that will be uploaded in the gene_plots/ directory describe h
     <summary>Global UMAP:</summary>
  
      <p align="center">
-  <img width="1200" src=/Example_Images/Global.png>
+  <img width="1200" src=/Example_Images/umap_embryo_time.png>
     </p>
    </details>
-+ <details>
-   <summary>Progenitor UMAP:</summary>
- 
-    <p align="center">
-  <img width="600" src=/Example_Images/Early.png>
-    </p>
-   </details>
+
 + <details>
    <summary>Ciliated neurons UMAP:</summary>
  
     <p align="center">
-  <img width="600" src=/Example_Images/Ciliated_neurons.png>
+  <img width="600" src=/Example_Images/umap_ciliated_neurons.png>
     </p>
    </details>
 + <details>
    <summary>Nonciliated neurons UMAP:</summary>
     <p align="center">
-  <img width="600" src=/Example_Images/Nonciliated_neurons.png>
+  <img width="600" src=/Example_Images/umap_non_ciliated_neurons.png>
     </p>
    </details>
 + <details>
    <summary>Hypodermis and seam UMAP:</summary>
     <p align="center">
-  <img width="600" src=/Example_Images/Hypodermis_seam.png>
+  <img width="600" src=/Example_Images/umap_hypodermis.png>
     </p>
    </details>
 + <details>
    <summary>Intestine UMAP:</summary>
     <p align="center">
-  <img width="600" src=/Example_Images/Intestine.png>
+  <img width="600" src=/Example_Images/umap_intestine.png>
     </p>
    </details>
 + <details>
    <summary>Mesoderm UMAP:</summary>
     <p align="center">
-  <img width="600" src=/Example_Images/Mesoderm.png>
+  <img width="600" src=/Example_Images/umap_mesoderm.png>
     </p>
    </details>
 + <details>
    <summary>Muscle UMAP:</summary>
     <p align="center">
-  <img width="600" src=/Example_Images/Muscle.png>
+  <img width="600" src=/Example_Images/umap_muscle.png>
     </p>
    </details>
 + <details>
-   <summary>Pharyx glia excretory UMAP:</summary>
+   <summary>Pharyx UMAP:</summary>
     <p align="center">
-  <img width="600" src=/Example_Images/Pharyx_glia_excretory.png>
+  <img width="600" src=/Example_Images/umap_pharynx.png>
+    </p>
+   </details>
++ <details>
+   <summary>Rectal and Glia UMAP:</summary>
+    <p align="center">
+  <img width="600" src=/Example_Images/umap_rectal_glia.png>
     </p>
    </details>
 </details>
