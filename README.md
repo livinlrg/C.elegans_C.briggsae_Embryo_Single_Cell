@@ -292,26 +292,37 @@ Available here is the expression value of every gene in the _C. elegans_ and _C.
 To identify genes differentially expressed between _C. elegans_ and _C. briggsae_ within the homologous cell-types, we used Seurat V4. A Wilcoxon Rank Sum test was run between the cells of that cell-type from _C. elegans_ against the cells of that cell-type from _C. briggsae_. The data have been filtered for an adjusted p-value less than 0.05 and a log2 fold-change of greater than 1 or less than -1. The columns in the table are as below:
 
  - p_val - The unadjusted p-value between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
- - avg_log2FC_elegans_to_briggsae - The log2 fold-change between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
- - elegans_cell_fraction - The fraction of cells for which this gene was detected in _C. elegans_.
- - briggsae_cell_fraction - The fraction of cells for which this gene was detected in _C. briggsae_.
+ - avg_log2FC - The log2 fold-change between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
+ - pct.1 - The fraction of cells for which this gene was detected in _C. elegans_.
+ - pct.2 - The fraction of cells for which this gene was detected in _C. briggsae_.
  - p_val_adj- The adjusted p-value between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
- - gene - The gene that was tested for its differential expression.
  - cell_type - The cell-type in which the gene was tested for its differential expression.
- - elegansTPM - The TPM of that gene in that cell-type.
- - elegansMaxTPM - The maximum TPM of that gene in any cell-type.
- - elegansMeanTPM - The average TPM of that gene across the cell-types.
- - elegansNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
- - elegansNumberCellTypesDetectedIn_0.10 - TThe number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
- - elegansNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
- - briggsaeTPM - The TPM of that gene in that cell-type.
- - briggsaeMaxTPM - The maximum TPM of that gene in any cell-type.
- - briggsaeMeanTPM - The average TPM of that gene across the cell-types.
- - briggsaeNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
- - briggsaeNumberCellTypesDetectedIn_0.10 - The number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
- - briggsaeNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
- - elegansTau - The broadness of the gene expression pattern.
- - briggsaeTau - The broadness of the gene expression pattern.
+ - gene - The gene that was tested for its differential expression.
+ - cell_type_bin - The cell type bin that this differentially expressed gene was found in.
+ - cel_tpm - The TPM of that gene in that cell-type for _C. elegans_.
+ - cbr_tpm - The TPM of that gene in that cell-type for _C. briggsae_.
+ - cel_max_tpm_term - The maximum TPM of that gene in terminal cell types for _C. elegans_.
+ - cbr_max_tpm_term - The maximum TPM of that gene in terminal cell types for _C. briggsae_.
+ - cel_max_tpm_pro - The maximum TPM of that gene in progenitor cell types for _C. elegans_.
+ - cbr_max_tpm_pro - The maximum TPM of that gene in progenitor cell types for _C. briggsae_.
+ - cel_mean_tpm_term - The mean TPM of that gene in terminal cell types for _C. elegans_.
+ - cbr_mean_tpm_term - The mean TPM of that gene in terminal cell types for _C. briggsae_.
+ - cel_mean_tpm_pro - The mean TPM of that gene in progenitor cell types for _C. elegans_.
+ - cbr_mean_tpm_pro - The mean TPM of that gene in progenitor cell types for _C. briggsae_.
+ - cel_tau_pro - The broadness of the gene expression pattern in just progenitor cell types for _C. elegans_.
+ - cbr_tau_pro - The broadness of the gene expression pattern in just progenitor cell types for _C. briggsae_.
+ - cel_tau_term - The broadness of the gene expression pattern in just terminal cell types for _C. elegans_.
+ - cbr_tau_term - The broadness of the gene expression pattern in just terminal cell types for _C. briggsae_.
+ - cel_tau_joint - The broadness of the gene expression pattern across the dataset for _C. elegans_.
+ - cbr_tau_joint - The broadness of the gene expression pattern across the dataset  for _C. briggsae_.
+ - gene.type - Whether the gene in shared between species, or is specific to one or the other.
+ - orthology_conf - The confidence in the orthology classification
+ - OG - The orthogroup name for this gene.
+ - cel_OG_count - The number of genes from _C. elegans_ in this orthogroup.
+ - cbr_OG_count - The number of genes from _C. briggsae_ in this orthogroup.
+ - WormCat.1 - The WormCat (Holdorf, et al., 2020) category of this gene at a tier one level.
+ - WormCat.2 - The WormCat category of this gene at a tier two level.
+ - WormCat.3 - The WormCat category of this gene at a tier three level.
 
 ---
 </p>
