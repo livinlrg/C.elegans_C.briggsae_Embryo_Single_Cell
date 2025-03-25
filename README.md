@@ -119,7 +119,7 @@ You can search for your favorite gene from either of the species by looking up t
  The cell-type summaries available in the cell_plots/ directory describe how the cell-types differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The data underlying the cell-types data is available in cell_data.txt for the terminal cell-types. The description of what is included in these summaries are below with an example plot for the ASG neuron:
 
  <p align="center">
-  <img width="800" src=/Example_Images/ASG.pdf>
+  <img width="800" src=/Example_Images/ASG.png>
 </p>
  
  1. The relative TPM of every gene in _C. elegans_ and _C. briggsae_. Whether a gene is a cell-type marker within that species or both is labeled.
@@ -137,51 +137,44 @@ You can search for your favorite gene from either of the species by looking up t
   - Cosine distance: Metric of distance between the two species cell transcriptomes using one minus the cosine angle.
   - The number of differentially expressed genes between the species.
 
-   ### The description of the cell_data files is below. The cell data is split into either time bins (cell_data_bins.txt) or means for the time bins (cell_data_mean.txt):
+   ### The description of the cell_data files is below. 
+   <p>The cell data is split into either time bins (cell_data_bins.txt) or means for the time bins (cell_data_mean.txt):</p>
+   
    - cell-type - The name of the cell type.
+   - cell_type_bin - The cell type time bins associated with this cell type.
+   - cell_class - The tissue subset the cell is a part of.
    - jsd_median - The median Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
    - jsd_lower - The lower 95% confidence-interval of the Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
    - jsd_upper - The upper 95% confidence-interval of the Jensen-shannon distance between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
- - corr_median - The median pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
- - corr_lower - The lower 95% confidence-interval of the Pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
- - corr_upper - The upper 95% confidence-interval of the Pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
- - cell_class - The tissue subset the cell is a part of.
- - neuron_type - The neuron-type as described in the L4 connectome.
- - n.umi - Mean number of UMI of the cells across both species.
- - elegans_gini - _C. elegans_ gini coefficient, calculated on the pseudobulked TPM.
- - briggsae_gini - _C. briggsae_ gini coefficient, calculated on the pseudobulked TPM.
- - elegans_genes_detected_0.05 - Number of genes detected using trinarization (Zeisel et al., 2018) at 5% prior for percentage of cells genes detected in
- - elegans_genes_detected_0.10 - Number of genes detected using trinarization at 10% prior for percentage of cells genes detected in
- - elegans_genes_maybe_0.05 - Number of genes maybe detected using trinarization at 5% prior for percentage of cells genes detected in
- - elegans_genes_maybe_0.10 - Number of genes maybe detected using trinarization at 10% prior for percentage of cells genes detected in
- - elegans_genes_ci_detected - Number of genes detected using binarization using the 95% CI on bootstrapped TPM
- - elegans_cell_count - Cell count
- - briggsae_detected_0.05 - Number of genes detected using trinarization at 5% prior for percentage of cells genes detected in
- - briggsae_detected_0.10 - Number of genes detected using trinarization at 10% prior for percentage of cells genes detected in
- - briggsae_maybe_0.05 - Number of genes maybe detected using trinarization at 5% prior for percentage of cells genes detected in
- - briggsae_maybe_0.10 - Number of genes maybe detected using trinarization at 10% prior for percentage of cells genes detected in
- - briggsae_ci_detected - Number of genes detected using binarization using the 95% CI on bootstrapped TPM
- - briggsae_cell_count - Cell count
- - both_detected_0.05 - Union of number of genes detected using trinarization at 5% prior for percentage of cells genes detected in
- - both_maybe_0.05 - Union of number of genes detected using trinarization at 10% prior for percentage of cells genes detected in
- - both_ci_detected - Union of number of genes detected using trinarization at 5% prior for percentage of cells genes detected in
- - either_detected_0.05 - Number of genes detected using trinarization at 5% prior for percentage of cells genes detected in for either species
- - either_maybe_0.05 - Number of genes detected using trinarization at 10% prior for percentage of cells genes detected in for either species
- - either_ci_detected - Number of genes  detected using binarization using the 95% CI on bootstrapped TPM in either species
- - btwn_species_dge - How many differentially expressed between homologous cell type between elegans and briggsae
- - filter_out - Should be filtered ==TRUE
- - deg_over_expressed_0.05 - How many differentially expressed between homologous cell type between elegans and briggsae over number of genes detected at 5% prior
- - deg_over_expressed_0.10 - How many differentially expressed between homologous cell type between elegans and briggsae over number of genes detected at 10% prior
- - deg_over_expressed_boot - How many differentially expressed between homologous cell type between elegans and briggsae over number of genes detected  using bootstrap binarization
- - ele_markers - Number of elegans markers
- - bri_markers - Number of briggsae markers
- - shared_markers - Number of shared markers
- - either_markers - Union of number of markers 
- - ele_markers_common - Number of markers in 1:1 orthology set
- - bri_markers_common - Number of markers in 1:1 orthology set
- - ele_markers_private - Number of markers that are private to elegans
- - bri_markers_private - Number of markers that are private to briggsae
- - either_markers_common - Union of number of markers using only 1:1 orthology set
+   - cor_median - The median pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - cor_lower - The lower 95% confidence-interval of the Pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - cor_upper - The upper 95% confidence-interval of the Pearson correlation between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - cos_median - The median cosine angle between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - cos_upper - The lower 95% confidence-interval of the cosine angle between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - cos_lower - The upper 95% confidence-interval of the cosine angle between the transcriptomes of the homologous cell-types between _C. elegans_ and _C. briggsae_, calculated on 1000 bootstraped TPM values.
+   - cel_gini_median - _C. elegans_ gini coefficient, calculated on calculated on 1000 bootstraped TPM values.
+   - cbr_gini_median - _C. briggsae_ gini coefficient, calculated on calculated on 1000 bootstraped TPM values.
+   - cel_gini_upper - _C. elegans_ upper 95% confidence-interval gini coefficient, calculated on calculated on 1000 bootstraped TPM values.
+   - cel_gini_lower - _C. elegans_ lower 95% confidence-interval gini coefficient, calculated on calculated on 1000 bootstraped TPM values.
+   - cbr_gini_upper - _C. briggsae_ upper 95% confidence-interval gini coefficient, calculated on calculated on 1000 bootstraped TPM values.
+   - cbr_gini_lower - _C. briggsae_ lower 95% confidence-interval gini coefficient, calculated on calculated on 1000 bootstraped TPM values.
+   - cel_markers - Number of _C. elegans_ markers.
+   - cbr_markers - Number of _C. briggsae_ markers.
+   - cel_markers_common - Number of _C. elegans_ shared markers.
+   - cbr_markers_common - Number of _C. briggsae_ shared markers.
+   - cel_markers_non_one_to_one - Number of markers that are private to _C. elegans_.
+   - cbr_markers_non_one_to_one - Number of markers that are private to _C. briggsae_.
+   - genes_detected_bootstrap_cel - Number of genes detected using binarization using the 95% CI on bootstrapped TPM.
+   - genes_detected_bootstrap_cbr - Number of genes detected using binarization using the 95% CI on bootstrapped TPM.
+   - cel_cell_count - Cell count for _C. elegans_.
+   - cbr_cell_count - Cell count for _C. briggsae_.
+   - cel_median_umi - Median number of UMI per cell.
+   - cbr_median_umi - Median number of UMI per cell.
+   - deg - How many differentially expressed between homologous cell type between _C. elegans_ and _C. briggsae_.
+   - lineage_group - Naming of progenitor cell groups.
+   - div_stage - The embryonic stage of that cell type.
+   - min_cell_count - The minimum cell count from either species.
+   - embryo_time - The mean embryo time of that cell type.
 
 ---
 </p>
@@ -268,13 +261,11 @@ The gene summaries that will be uploaded in the gene_plots/ directory describe h
  1. Global UMAP showing the expression of your gene of interest. 
  2. Cell subset UMAP showing the expression of your gene of interest. The choice of which UMAP is shown is based on which cell-type shows maximum expression across all cell-types between the two species.
  3. Terminal cell-type comparative TPM values shown in log2 space. The cell-types are summarized by their cell class.
- 4. Progenitor cell-type comparative TPM values shown in log2 space. The progenitors are summarized by their general lineage type.
- 5. A bunch of gene metrics, where the values for this gene is shown in red as a confidence interval (CI) range on top of the dataset wide distribution. These metrics are shown for the terminal and progenitor cell-types.
+ 4. Progenitor cell-type comparative TPM values shown in log2 space. The circle plots summarize the division patterns in the embryo.
+ 5. A bunch of gene metrics, where the values for this gene is shown in red as a confidence interval (CI) range on top of the dataset wide distribution. These metrics are shown for the jointly estimated, terminal, and progenitor cell types.
   - Gene expression patern distance shown as the Jensen-Shannon Distance (JSD) calculated on the bootstrapped TPM values. The CI and median for the gene JSD was calculated on the bootstrap resampled TPM values.
-  - Gene expression patern distance shown as the Pearson correlation coefficient calculated on the bootstrapped TPM values. The CI and median for the gene Pearson correlation coefficient was calculated on the bootstrap resampled TPM values.
   - The broadness of gene expression pattern shown as the Tau value for _C. elegans_.
   - The broadness of gene expression pattern shown as the Tau value for _C. briggsae_.
-  - The maximum TPM value across any cell-type in both species.
 ---
 </p>
 </p>
@@ -332,44 +323,50 @@ To identify genes differentially expressed between _C. elegans_ and _C. briggsae
 <p>
  <p>
   
-To identify genes that are specific to certain cell-types in _C. elegans_ and _C. briggsae_, marker genes were called in both species using Seurat V4. In practice a Wilcoxon Rank Sum test is run between all of the cells of that cell-type against the rest of the dataset to find genes that are significantly enriched in the cell-type. The data have been filtered for an adjusted p-value less than 0.05 and a log2 fold-change of greater than 1 between the cell-type and the dataset. This was calculated for both species in the dataset on the terminal cell-types. The columns in the table are as below:
+To identify genes that are specific to certain cell-types in _C. elegans_ and _C. briggsae_, marker genes were called in both species using Seurat V5. In practice a Wilcoxon Rank Sum test is run between all of the cells of that cell-type against the rest of the dataset to find genes that are significantly enriched in the cell-type. The data have been filtered for an adjusted p-value less than 0.05 and a log2 fold-change of greater than 1 between the cell-type and the dataset. This was calculated for both species in the dataset on the terminal cell-types. The columns in the table are as below:
 
  - p_val.species - The unadjusted p-value between the cells of that cell-type and the cells of rest of the dataset for that species.
  - avg_log2FC.species - The log2 fold-change between the cells of that cell-type and the cells of rest of the dataset for that species.
  - pct.1.species - The fraction of cells for which this gene was detected in that cell-type for that species.
  - pct.2.species - The fraction of cells for which this gene was detected in the rest of the cells in the dataset for that species.
  - p_val_adj.species - The adjusted p-value between the cells of that cell-type and the cells of rest of the dataset for that species.
- - cell-type - The cell-type in which the gene was tested for its marker status.
+ - cell_type - The cell-type in which the gene was tested for its marker status.
  - gene - The gene that was tested for its marker status.
+ - cell_gene - The joint name of the cell type and the gene.
  - p_val.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
  - avg_log2FC.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
  - pct.1.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
  - pct.2.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
  - p_val_adj.other_species - If the gene was tested in the other species for its marker status, the values for that test are shown here.
- - elegansTPM - The TPM of that gene in that cell-type.
- - elegansMaxTPM - The maximum TPM of that gene in any cell-type.
- - elegansMeanTPM - The average TPM of that gene across the cell-types.
- - elegansNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
- - elegansNumberCellTypesDetectedIn_0.10 - The number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
- - elegansNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
- - briggsaeTPM - The TPM of that gene in that cell-type.
- - briggsaeMaxTPM - The maximum TPM of that gene in any cell-type.
- - briggsaeMeanTPM - The average TPM of that gene across the cell-types.
- - briggsaeNumberCellTypesDetectedIn_0.05 - The number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 5% of the cells of that cell-type.
- - briggsaeNumberCellTypesDetectedIn_0.10 - The number of cell-types that gene was confidently detected in using a trinarization method that tests whether a gene is confidently detected in at least 10% of the cells of that cell-type.
- - briggsaeNumberCellTypesDetectedIn_Boot - The number of cell-type that gene was confidently, calculated by generating 1000 bootstraps of the TPM, then selecting genes whose 95% lower CI doesn’t intersect 0.
- - elegansTau - The broadness of the gene expression pattern.
- - briggsaeTau - The broadness of the gene expression pattern.
- - InOtherSpecies - Whether this gene marker is also a marker in the other species.
- - orthologous_gene - Whether the gene was found to be orthologous between the two species by WormBase and a synteny recovery method.
- - elegansSinglet - Whether the gene was found as a 1:x ortholog in _C. elegans_ by OrthoFinder.
- - briggsaeSinglet - Whether the gene was found as a 1:x ortholog in _C. briggsae by OrthoFinder.
- - orthogroupSize - The size of the orthogroup (number of genes in that 'family').
- - orthogroupName - The name of the orthogroup (for internal use).
+ - cel_tpm_log2fc - The log2FC using the TPM pseudobulk values instead of the single-cell estimates.
+ - cbr_tpm_log2fc - The log2FC using the TPM pseudobulk values instead of the single-cell estimates.
+ - cel_tpm_log2fc - The log2FC using the TPM pseudobulk values from just the progenitor cell types instead of the single-cell estimates.
+ - cbr_tpm_log2fc - The log2FC using the TPM pseudobulk values from just the progenitor cell types instead of the single-cell estimates.
+ - cel_tpm - The TPM of that gene in that cell-type for _C. elegans_.
+ - cbr_tpm - The TPM of that gene in that cell-type for _C. briggsae_.
+ - cel_max_tpm_term - The maximum TPM of that gene in terminal cell types for _C. elegans_.
+ - cbr_max_tpm_term - The maximum TPM of that gene in terminal cell types for _C. briggsae_.
+ - cel_max_tpm_pro - The maximum TPM of that gene in progenitor cell types for _C. elegans_.
+ - cbr_max_tpm_pro - The maximum TPM of that gene in progenitor cell types for _C. briggsae_.
+ - cel_mean_tpm_term - The mean TPM of that gene in terminal cell types for _C. elegans_.
+ - cbr_mean_tpm_term - The mean TPM of that gene in terminal cell types for _C. briggsae_.
+ - cel_mean_tpm_pro - The mean TPM of that gene in progenitor cell types for _C. elegans_.
+ - cbr_mean_tpm_pro - The mean TPM of that gene in progenitor cell types for _C. briggsae_.
+ - cel_tau_pro - The broadness of the gene expression pattern in just progenitor cell types for _C. elegans_.
+ - cbr_tau_pro - The broadness of the gene expression pattern in just progenitor cell types for _C. briggsae_.
+ - cel_tau_term - The broadness of the gene expression pattern in just terminal cell types for _C. elegans_.
+ - cbr_tau_term - The broadness of the gene expression pattern in just terminal cell types for _C. briggsae_.
+ - cel_tau_joint - The broadness of the gene expression pattern across the dataset for _C. elegans_.
+ - cbr_tau_joint - The broadness of the gene expression pattern across the dataset  for _C. briggsae_.
+ - gene.type - Whether the gene in shared between species, or is specific to one or the other.
+ - orthology_conf - The confidence in the orthology classification
+ - OG - The orthogroup name for this gene.
+ - cel_OG_count - The number of genes from _C. elegans_ in this orthogroup.
+ - cbr_OG_count - The number of genes from _C. briggsae_ in this orthogroup.
  - WormCat.1 - The WormCat (Holdorf, et al., 2020) category of this gene at a tier one level.
  - WormCat.2 - The WormCat category of this gene at a tier two level.
  - WormCat.3 - The WormCat category of this gene at a tier three level.
-
+ - in_species - Whether this gene marker is also a marker in the other species.
 ---
 </p>
 </p>
