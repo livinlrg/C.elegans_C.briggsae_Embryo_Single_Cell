@@ -122,6 +122,7 @@ for(cur_species in c("C.elegans", "C.briggsae")) {
 }
 
 saveRDS(bootstrapTPMList, paste0(dir, "Objects/bootstrapTPMTimeBinsList_CellCorrection.rds"))
+bootstrapTPMList <- readRDS(paste0(dir, "Objects/bootstrapTPMTimeBinsList_CellCorrection.rds"))
 
 TPMListBootstrap <- list()
 for(cur_species in names(bootstrapTPMList)) {
@@ -147,6 +148,8 @@ TPMListBootstrapSubset[["C.elegans"]] <- TPMListBootstrapSubset[["C.elegans"]][m
 saveRDS(TPMListBootstrap, paste0(dir, "Objects/TPMTimeBinsListBootstrap_CellCorrection.rds"))
 saveRDS(TPMListBootstrapSubset, paste0(dir, "Objects/TPMTimeBinsListBootstrapSubset_CellCorrection.rds"))
 
+TPMListBootstrap <- readRDS(paste0(dir, "Objects/TPMTimeBinsListBootstrap_CellCorrection.rds"))
+
 ## Lower quantile bootstrap cutoff
 TPMDataframeBootstrap <- data.frame(matrix(ncol = 8, nrow = 0))
 colnames(TPMDataframeBootstrap) <- c(colnames(bootstrapTPMList[[1]][[1]]), "species")
@@ -163,9 +166,11 @@ for(cur_species in names(bootstrapTPMList)) {
   }
 }
 
+saveRDS(TPMDataframeBootstrap, paste0(dir, "Objects/TPMDataframeBootstrap_CellCorrection.rds"))
 TPMTimeBinsList <- readRDS(paste0(dir, "Objects/TPMTimeBinsList.rds"))
 
 library(reshape2)
+
 BinarizeBootstrapList <- list()
 for(cur_species in levels(factor(TPMDataframeBootstrap$species))) {
   BinarizeBootstrapList[[cur_species]] <- dcast(TPMDataframeBootstrap[TPMDataframeBootstrap$species == cur_species, c(1,2,4)], gene ~ cell.type, value.var = "ci_5")
@@ -187,6 +192,31 @@ BinarizeBootstrapListSubset[["C.elegans"]] <- BinarizeBootstrapListSubset[["C.el
                                                                                                rownames(BinarizeBootstrapListSubset[["C.elegans"]])),]
 
 saveRDS(BinarizeBootstrapListSubset, paste0(dir, "Objects/BinarizeBootstrapTimeBinsListSubset_CellCorrection.rds"))
+
+## Upper quantile bootstrap cutoff
+BinarizeBootstrapList_Upper <- list()
+
+for(cur_species in levels(factor(TPMDataframeBootstrap$species))) {
+  BinarizeBootstrapList_Upper[[cur_species]] <- dcast(TPMDataframeBootstrap[TPMDataframeBootstrap$species == cur_species, c(1,2,7)], gene ~ cell.type, value.var = "ci_95")
+  rownames(BinarizeBootstrapList_Upper[[cur_species]]) <- BinarizeBootstrapList_Upper[[cur_species]]$gene
+  BinarizeBootstrapList_Upper[[cur_species]]$gene <- NULL
+  BinarizeBootstrapList_Upper[[cur_species]] <- BinarizeBootstrapList_Upper[[cur_species]][match(rownames(TPMTimeBinsList[[cur_species]]), rownames(BinarizeBootstrapList_Upper[[cur_species]])),]
+}
+
+BinarizeBootstrapList_Upper[["C.elegans"]] <- BinarizeBootstrapList_Upper[["C.elegans"]][,match(colnames(BinarizeBootstrapList_Upper[["C.briggsae"]]), colnames(BinarizeBootstrapList_Upper[["C.elegans"]]))]
+
+saveRDS(BinarizeBootstrapList_Upper, paste0(dir, "Objects/BinarizeBootstrapTimeBinsListUpper_CellCorrection.rds"))
+
+BinarizeBootstrapListSubset_Upper <- list()
+BinarizeBootstrapListSubset_Upper[["C.elegans"]] <- BinarizeBootstrapList_Upper[["C.elegans"]][rownames(BinarizeBootstrapList_Upper[["C.elegans"]]) %in% rownames(BinarizeBootstrapList_Upper[["C.briggsae"]]),]
+BinarizeBootstrapListSubset_Upper[["C.briggsae"]] <- BinarizeBootstrapList_Upper[["C.briggsae"]][rownames(BinarizeBootstrapList_Upper[["C.briggsae"]]) %in% rownames(BinarizeBootstrapList_Upper[["C.elegans"]]),]
+
+# Reordered
+BinarizeBootstrapListSubset_Upper[["C.elegans"]] <- BinarizeBootstrapListSubset_Upper[["C.elegans"]][match(rownames(BinarizeBootstrapListSubset_Upper[["C.briggsae"]]),
+                                                                                               rownames(BinarizeBootstrapListSubset_Upper[["C.elegans"]])),]
+
+saveRDS(BinarizeBootstrapListSubset_Upper, paste0(dir, "Objects/BinarizeBootstrapTimeBinsListUpperSubset_CellCorrection.rds"))
+
 
 ################################################
 # Calculate cell distances from boot objects

@@ -735,7 +735,6 @@ for(species in c("elegans", "briggsae")) {
   }
 }
 
-
 col_order <- pheatmap(scenic_zscore_list[["elegans_cel"]])$tree_col$labels[pheatmap(scenic_zscore_list[["elegans_cel"]])$tree_col$order]
 row_order <- pheatmap(scenic_zscore_list[["elegans_cel"]])$tree_row$labels[pheatmap(scenic_zscore_list[["elegans_cel"]])$tree_row$order]
 
@@ -746,6 +745,16 @@ pheatmap(scenic_zscore_list[["briggsae_cel"]][row_order,col_order],
          cluster_rows = FALSE,
          cluster_cols = FALSE)
 dev.off()
+
+
+
+cel_regs_df <- readRDS(paste0(dir, "Objects/scenic/cel_regs_df.rds"))
+cbr_regs_df <- readRDS(paste0(dir, "Objects/scenic/cbr_regs_df.rds"))
+cel_regs_df_chip <- readRDS(paste0(dir, "Objects/scenic/cel_regs_df_chip.rds"))
+
+cel_regs_df_filt <- readRDS(paste0(dir, "Objects/scenic/cel_regs_df_filt.rds"))
+cbr_regs_df_filt <- readRDS(paste0(dir, "Objects/scenic/cbr_regs_df_filt.rds"))
+cel_regs_df_chip_filt <- readRDS(paste0(dir, "Objects/scenic/cel_regs_df_chip_filt.rds"))
 
 ## Output the modules as a txt file
 cel_regs_df$gene_orthology <- ifelse(cel_regs_df$genes %in% common_genes, "orthologous", "non_orthologous")
@@ -889,6 +898,7 @@ for(cur_cell_class in unique(cell_data$cell_class)[unique(cell_data$cell_class) 
 }
 
 saveRDS(lineage_list, paste0(dir, "Objects/lineage_list.rds"))
+lineage_list <- readRDS(paste0(dir, "Objects/lineage_list.rds"))
 
 cell_class_barcodes <- list()
 for(cur_cell_class in unique(cell_data$cell_class[! cell_data$cell_class %in% c("progenitor", "Germline")])) {
@@ -902,6 +912,8 @@ for(cur_cell_class in unique(cell_data$cell_class[! cell_data$cell_class %in% c(
 }
 
 saveRDS(cell_class_barcodes, paste0(dir, "Objects/cell_class_barcodes.rds"))
+cell_class_barcodes <- readRDS(paste0(dir, "Objects/cell_class_barcodes.rds"))
+
 
 scenic_zscore_mean_list <- list()
 for(species in c("elegans", "briggsae")) {
@@ -1262,7 +1274,7 @@ for(cur_motif in c("fkh-8(+)")) {
                                                 species = colData(cds_filt[,cell_class_barcodes[["Ciliated neurons"]]])$species)
 }
 
-pdf(paste0(dir, "Plots/scenic/daf_19_fkh_8_time_bins_cel.pdf"), width = 5, height = 5)
+pdf(paste0(dir, "Plots/scenic/daf_19_fkh_8_time_bins_cel.pdf"), width = 5, height = 3.5)
 do.call(rbind, cell_motif_list_cn[c("fkh-8(+)", "daf-19(+)")]) %>%
   filter(! embryo.time.bin %in% c("gt_710", "lt_100")) %>%
   ggplot(aes(x = embryo.time.bin, y = auc_cel,
@@ -1306,7 +1318,7 @@ for(cur_motif in c("elt-7(+)", "nhr-109(+)")) {
                                                 species = colData(cds_filt[,cell_class_barcodes[["Intestine"]]])$species)
 }
 
-pdf(paste0(dir, "Plots/scenic/elt_7_time_bins_cel.pdf"), width = 5, height = 5)
+pdf(paste0(dir, "Plots/scenic/elt_7_time_bins_cel.pdf"), width = 5, height = 3.5)
 do.call(rbind, cell_motif_list_cn[c("elt-7(+)")]) %>%
   filter(! embryo.time.bin %in% c("gt_710", "lt_100")) %>%
   ggplot(aes(x = embryo.time.bin, y = auc_cel, group = paste0(species, "_", motif),

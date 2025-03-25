@@ -41,6 +41,16 @@ BinTPM <- function(matrix) {
   return(matrix_rowMean/colSum * 1000000)
 }
 
+## TPM calculations
+BinRobustTPM <- function(matrix) {
+  matrix_rowMean <- apply(matrix, 1, function(x) {
+    x = sort(x);
+    mean(x[2:(length(x)-1)]) # try to make estimates more robust against outliers
+  })
+  colSum <- sum(matrix_rowMean)
+  return(matrix_rowMean/colSum * 1000000)
+}
+
 # Basic TPM Calculation
 CalcTPM <- function(cur_cds, column) {
   norm.expr = get.norm.expr.matrix(cur_cds) # normalize by size factor

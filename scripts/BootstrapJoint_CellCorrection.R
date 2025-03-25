@@ -568,5 +568,81 @@ BinarizeBootstrapListPro <- lapply(BinarizeBootstrapListPro, function(x) {
 })
 saveRDS(BinarizeBootstrapListPro, paste0(dir, "Objects/BinarizeBootstrapListPro_CellCorrection.rds"))
 
+BootstrapListUpper <- readRDS(paste0(dir, "Objects/BinarizeBootstrapTimeBinsListUpper_CellCorrection.rds"))
+BootstrapListProUpper <- readRDS(paste0(dir, "Objects/BinarizeBootstrapListUpperPro_CellCorrection.rds"))
 
+BootstrapListUpperJoint <- list()
+BootstrapListUpperJoint[["C.elegans"]] <- cbind(BootstrapListUpper[["C.elegans"]], BootstrapListProUpper[["C.elegans"]])
+BootstrapListUpperJoint[["C.briggsae"]] <- cbind(BootstrapListUpper[["C.briggsae"]], BootstrapListProUpper[["C.briggsae"]])
 
+BootstrapListUpperJoint <- lapply(BootstrapListUpperJoint, function(x) {
+  return(x[,! colnames(x) %in% c("hyp3_390_450:580_650", "ABalaapppp/ABalapaapp")])
+})
+
+saveRDS(BootstrapListUpperJoint, paste0(dir, "Objects/BootstrapListUpperJoint_CellCorrection.rds"))
+
+######################
+# Bootstrap matrices #
+######################
+
+BootstrapListUpperJoint <- readRDS(paste0(dir, "Objects/BootstrapListUpperJoint_CellCorrection.rds"))
+
+BinarizeBootstrapListPro <- readRDS(paste0(dir, "Objects/BinarizeBootstrapListPro_CellCorrection.rds"))
+BinarizeBootstrapList_term <- readRDS(paste0(dir, "Objects/BinarizeBootstrapList_CellCorrection.rds"))
+
+BootstrapListLowerJoint <- list()
+BootstrapListLowerJoint[["C.elegans"]] <- cbind(BinarizeBootstrapList_term[["C.elegans"]], BinarizeBootstrapListPro[["C.elegans"]])
+BootstrapListLowerJoint[["C.briggsae"]] <- cbind(BinarizeBootstrapList_term[["C.briggsae"]], BinarizeBootstrapListPro[["C.briggsae"]])
+
+# Cell_type x gene x species
+tpm_matrix_time_list <- list()
+tpm_matrix_time_t_list <- list()
+for(cur_species in c("C.elegans", "C.briggsae")) {
+  temp_gene_tpm <- t(BootstrapListLowerJoint[[cur_species]])
+  cell_names <- rownames(temp_gene_tpm)
+  temp_gene_tpm <- data.frame(temp_gene_tpm)
+  temp_gene_tpm$cell <- cell_names
+  
+  tpm_matrix_time_list[[cur_species]] <- left_join(CellTableTimeBins[,c("Lineage", "TPMName")], temp_gene_tpm, by = c("TPMName" = "cell"))
+  rownames(tpm_matrix_time_list[[cur_species]]) <- tpm_matrix_time_list[[cur_species]]$Lineage
+  
+  tpm_matrix_time_t_list[[cur_species]] <- t(tpm_matrix_time_list[[cur_species]][, -c(1, 2)])
+  rownames(tpm_matrix_time_t_list[[cur_species]]) <- rownames(BootstrapListLowerJoint[[cur_species]])
+}
+tpm_matrix_time_list <- tpm_matrix_time_t_list
+
+saveRDS(tpm_matrix_time_list, paste0(dir, "Objects/tpm_matrix_lower_ci_time_list_cell_bg.rds"))
+
+tpm_matrix_time_list_filt <- list()
+tpm_matrix_time_list_filt[["C.elegans"]] <- tpm_matrix_time_list[["C.elegans"]][, which(colSums(tpm_matrix_time_list[["C.elegans"]] > 0) > 0)]
+tpm_matrix_time_list_filt[["C.briggsae"]] <- tpm_matrix_time_list[["C.briggsae"]][, which(colSums(tpm_matrix_time_list[["C.briggsae"]] > 0) > 0)]
+
+saveRDS(tpm_matrix_time_list_filt, paste0(dir, "Objects/tpm_matrix_lower_ci_time_list_filt_cell_bg.rds"))
+
+# Cell_type x gene x species
+tpm_matrix_time_list <- list()
+tpm_matrix_time_t_list <- list()
+for(cur_species in c("C.elegans", "C.briggsae")) {
+  temp_gene_tpm <- t(BootstrapListUpperJoint[[cur_species]])
+  cell_names <- rownames(temp_gene_tpm)
+  temp_gene_tpm <- data.frame(temp_gene_tpm)
+  temp_gene_tpm$cell <- cell_names
+  
+  tpm_matrix_time_list[[cur_species]] <- left_join(CellTableTimeBins[,c("Lineage", "TPMName")], temp_gene_tpm, by = c("TPMName" = "cell"))
+  rownames(tpm_matrix_time_list[[cur_species]]) <- tpm_matrix_time_list[[cur_species]]$Lineage
+  
+  tpm_matrix_time_t_list[[cur_species]] <- t(tpm_matrix_time_list[[cur_species]][, -c(1, 2)])
+  rownames(tpm_matrix_time_t_list[[cur_species]]) <- rownames(BootstrapListUpperJoint[[cur_species]])
+}
+tpm_matrix_time_list <- tpm_matrix_time_t_list
+
+saveRDS(tpm_matrix_time_list, paste0(dir, "Objects/tpm_matrix_upper_ci_time_list_cell_bg.rds"))
+
+tpm_matrix_time_list_filt <- list()
+tpm_matrix_time_list_filt[["C.elegans"]] <- tpm_matrix_time_list[["C.elegans"]][, which(colSums(tpm_matrix_time_list[["C.elegans"]] > 0) > 0)]
+tpm_matrix_time_list_filt[["C.briggsae"]] <- tpm_matrix_time_list[["C.briggsae"]][, which(colSums(tpm_matrix_time_list[["C.briggsae"]] > 0) > 0)]
+
+saveRDS(tpm_matrix_time_list_filt, paste0(dir, "Objects/tpm_matrix_upper_ci_time_list_filt_cell_bg.rds"))
+
+tpm_matrix_lower <- readRDS(paste0(dir, "Objects/tpm_matrix_lower_ci_time_list_filt_cell_bg.rds"))
+tpm_matrix_upper <- readRDS(paste0(dir, "Objects/tpm_matrix_upper_ci_time_list_filt_cell_bg.rds"))

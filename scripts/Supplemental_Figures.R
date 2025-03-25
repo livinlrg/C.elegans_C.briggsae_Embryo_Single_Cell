@@ -18,11 +18,23 @@ rm(cds)
 
 synteny <- readRDS(paste0(dir, "Objects/synteny_filt.rds"))
 gff_list_mrna <- readRDS(paste0(dir, "Objects/gff_list_mrna.rds"))
+rownames(gff_list_mrna[["elegans"]]) <- ifelse(is.na(gff_list_mrna[["elegans"]]$cds_gene_name), gff_list_mrna[["elegans"]]$gene_name, gff_list_mrna[["elegans"]]$cds_gene_name)
+rownames(gff_list_mrna[["briggsae"]]) <- ifelse(is.na(gff_list_mrna[["briggsae"]]$cds_gene_name), gff_list_mrna[["briggsae"]]$gene_name, gff_list_mrna[["briggsae"]]$cds_gene_name)
 
 cell_data <- readRDS(paste0(dir, "Objects/cell_data_joint_mean_cell_bg.rds"))
 CellTable <- readRDS(paste0(dir, "Objects/CellTable_Names_20240901.rds"))
 
 TPMLineageList <- readRDS(paste0(dir, "Objects/TPMLineageList.rds"))
+
+TPMListBootstrapMean_term <- readRDS(paste0(dir, "Objects/TPMListBootstrapMean_CellCorrection.rds"))
+TPMListBootstrap_pro <- readRDS(paste0(dir, "Objects/TPMListBootstrapPro_CellCorrection.rds"))
+
+TPMJoint <- list()
+TPMJoint[["C.elegans"]] <- cbind(TPMListBootstrap_pro[["C.elegans"]][,sort(colnames(TPMListBootstrap_pro[["C.elegans"]]))], TPMListBootstrapMean_term[["C.elegans"]])
+TPMJoint[["C.briggsae"]] <- cbind(TPMListBootstrap_pro[["C.briggsae"]][,sort(colnames(TPMListBootstrap_pro[["C.elegans"]]))], TPMListBootstrapMean_term[["C.briggsae"]])
+
+OldPath <- "/kimdata/livinlrg/scAnalysis/BobDataComb/"
+og_data <- readRDS(paste0(OldPath, "Objects/WS290/og_data.rds"))
 
 ###################################
 # Cell bleach time by embryo time #
@@ -100,12 +112,11 @@ colData(cds_filt)[colData(cds_filt)$dataset3 == "Murray_r17",]$bleach_time <- "A
 
 BleachTime <- data.frame(colData(cds_filt)) %>%
   group_by(bleach_time, embryo.time.bin, species) %>%
-  summarise(n = n())
-
-BleachTime <- BleachTime %>% group_by(species) %>%
-  mutate(freq = n / sum(n))
-
-BleachTime <- BleachTime %>% ungroup() %>% tidyr::complete(bleach_time, embryo.time.bin, species)
+  summarise(n = n()) %>%
+  BleachTime %>% group_by(species) %>%
+  mutate(freq = n / sum(n)) %>%
+  ungroup() %>%
+  tidyr::complete(bleach_time, embryo.time.bin, species)
 
 BleachTime$species <- factor(BleachTime$species, levels = c("C.briggsae", "C.elegans"),
                              labels = c("C. briggsae", "C. elegans"))
@@ -1161,7 +1172,7 @@ core_cilia_cbr_exp$species <- "C.briggsae"
 core_cilia_exp <- rbind(core_cilia_cel_exp[,c(paste0("Ciliated neurons_", time_bin_df[! time_bin_df$bins %in% c("gt_710", "lt_100"),]$bins), "species", "gene")],
                        core_cilia_cbr_exp[,c(paste0("Ciliated neurons_", time_bin_df[! time_bin_df$bins %in% c("gt_710", "lt_100"),]$bins), "species", "gene")])
 
-core_cilia_exp_melt <- melt(core_cilia_exp, id.vars = c("species", "gene"))
+core_cilia_exp_melt <- reshape2::melt(core_cilia_exp, id.vars = c("species", "gene"))
 
 head(core_cilia_exp_melt)
 core_cilia_exp_melt$line_type = "solid"
@@ -1231,8 +1242,6 @@ core_cilia_exp_melt %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 dev.off()
 
-
-
 dtw_cilia_cel_exp <- TPMLineageList[["C.elegans"]][dtw_cilia[dtw_cilia %in% rownames(TPMLineageList[["C.briggsae"]])], grepl("Ciliated neurons", colnames(TPMLineageList[["C.elegans"]]))]
 dtw_cilia_cbr_exp <- TPMLineageList[["C.briggsae"]][dtw_cilia[dtw_cilia %in% rownames(TPMLineageList[["C.briggsae"]])], grepl("Ciliated neurons", colnames(TPMLineageList[["C.briggsae"]]))]
 
@@ -1284,8 +1293,6 @@ timing_gene_df <- rbind(rbind(data.frame(gene = "daf-19",
                             species = "C.elegans"))) %>%
   filter(time != "lt_100" & time != "gt_710")
 
-
-
 pdf(paste0(dir, "Plots/supplemental_plots/daf_19_fkh_8_expression.pdf"), width = 5, height = 5.5)
 timing_gene_df %>%
   ggplot(aes(x = time, y = norm_expression,
@@ -1322,60 +1329,91 @@ timing_gene_df %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 dev.off()
 
+pdf(paste0(dir, "Plots/supplemental_plots/daf_19_fkh_8_expression_grouped.pdf"), width = 5, height = 5.5)
+timing_gene_df %>%
+  ggplot(aes(x = time, y = norm_expression,
+             color = species,
+             group = paste0(species, "_", gene))) +
+  facet_wrap(~gene, nrow = 3) + 
+  geom_line(size = 1.5) +
+  scale_color_manual(name = "Species", values = c('C.briggsae' = "#56B4E9",
+                                                  'C.elegans' = "#009E73")) +
+  scale_x_discrete(name = "Embryo time bin", limits = time_bin_df[! time_bin_df$bins %in% c("gt_710", "lt_100"),]$bins,
+                   labels = paste0(time_bin_df[! time_bin_df$bins %in% c("gt_710", "lt_100"),]$start, " to ",
+                                   time_bin_df[! time_bin_df$bins %in% c("gt_710", "lt_100"),]$end)) +
+  scale_y_continuous(name = "Max normalized expression") +
+  theme(legend.title = element_blank(),
+        legend.position = "top",
+        rect = element_rect(fill = "transparent"),
+        axis.text = element_text(size = 12),
+        axis.line = element_line(color="grey80", size=1),
+        strip.background = element_rect(fill = "transparent"),
+        panel.grid.major.y = element_line(color="grey80", size=0.25),
+        panel.grid.minor.y = element_line(color="grey80", size=0.05),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.background = element_rect(fill='transparent'), #transparent panel bg
+        plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
+        legend.box.background = element_rect(colour = "transparent", fill = "transparent"),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+dev.off()
+
+
 CN_TPMLineageList <- list()
 CN_TPMLineageList[["C.elegans"]] <- TPMLineageList[["C.elegans"]][,grepl("Ciliated neurons", colnames(TPMLineageList[["C.elegans"]]))]
 CN_TPMLineageList[["C.briggsae"]] <- TPMLineageList[["C.briggsae"]][,grepl("Ciliated neurons", colnames(TPMLineageList[["C.briggsae"]]))]
 
 timing_sets_df <- rbind(
-rbind(
-rbind(data.frame(gene = "daf-19",
-                 time = c("100_130", "130_170",
-                          "170_210", "210_270", "270_330",
-                          "330_390", "390_450", "450_510",
-                          "510_580", "580_650", "650_710"),
-                 expression = unlist(CN_TPMLineageList[["C.elegans"]][c("daf-19"),]),
-                 norm_expression = unlist(CN_TPMLineageList[["C.elegans"]][c("daf-19"),]) / max(CN_TPMLineageList[["C.elegans"]]["daf-19",], CN_TPMLineageList[["C.briggsae"]]["daf-19",]),
-                 species = "C.elegans"),
-      data.frame(gene = "daf-19",
-                 time = c("lt_100", "100_130", "130_170",
-                          "170_210", "210_270", "270_330",
-                          "330_390", "390_450", "450_510",
-                          "510_580", "580_650", "650_710", "gt_710"),
-                 expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("daf-19"),]),
-                 norm_expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("daf-19"),]) / max(CN_TPMLineageList[["C.elegans"]]["daf-19",], CN_TPMLineageList[["C.briggsae"]]["daf-19",]),
-                 species = "C.briggsae")),
-rbind(data.frame(gene = "fkh-8",
-                 time = c("100_130", "130_170",
-                          "170_210", "210_270", "270_330",
-                          "330_390", "390_450", "450_510",
-                          "510_580", "580_650", "650_710"),
-                 expression = unlist(CN_TPMLineageList[["C.elegans"]][c("fkh-8"),]),
-                 norm_expression = unlist(CN_TPMLineageList[["C.elegans"]][c("fkh-8"),]) / max(CN_TPMLineageList[["C.elegans"]]["fkh-8",], CN_TPMLineageList[["C.briggsae"]]["fkh-8",]),
-                 species = "C.elegans"),
-      data.frame(gene = "fkh-8",
-                 time = c("lt_100", "100_130", "130_170",
-                          "170_210", "210_270", "270_330",
-                          "330_390", "390_450", "450_510",
-                          "510_580", "580_650", "650_710", "gt_710"),
-                 expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("fkh-8"),]),
-                 norm_expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("fkh-8"),]) / max(CN_TPMLineageList[["C.elegans"]]["fkh-8",], CN_TPMLineageList[["C.briggsae"]]["fkh-8",]),
-                 species = "C.briggsae"))),
-rbind(data.frame(gene = "core_cilia",
-                 time = c("100_130", "130_170",
-                          "170_210", "210_270", "270_330",
-                          "330_390", "390_450", "450_510",
-                          "510_580", "580_650", "650_710"),
-                 expression = colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]),
-                 norm_expression = colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]) / max(colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]), colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))])),
-                 species = "C.elegans"),
-      data.frame(gene = "core_cilia",
-                 time = c("lt_100", "100_130", "130_170",
-                          "170_210", "210_270", "270_330",
-                          "330_390", "390_450", "450_510",
-                          "510_580", "580_650", "650_710", "gt_710"),
-                 expression = colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))]),
-                 norm_expression = colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))]) / max(colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]), colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))])),
-                 species = "C.briggsae")))
+  rbind(
+    rbind(data.frame(gene = "daf-19",
+                     time = c("100_130", "130_170",
+                              "170_210", "210_270", "270_330",
+                              "330_390", "390_450", "450_510",
+                              "510_580", "580_650", "650_710"),
+                     expression = unlist(CN_TPMLineageList[["C.elegans"]][c("daf-19"),]),
+                     norm_expression = unlist(CN_TPMLineageList[["C.elegans"]][c("daf-19"),]) / max(CN_TPMLineageList[["C.elegans"]]["daf-19",], CN_TPMLineageList[["C.briggsae"]]["daf-19",]),
+                     species = "C.elegans"),
+          data.frame(gene = "daf-19",
+                     time = c("lt_100", "100_130", "130_170",
+                              "170_210", "210_270", "270_330",
+                              "330_390", "390_450", "450_510",
+                              "510_580", "580_650", "650_710", "gt_710"),
+                     expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("daf-19"),]),
+                     norm_expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("daf-19"),]) / max(CN_TPMLineageList[["C.elegans"]]["daf-19",], CN_TPMLineageList[["C.briggsae"]]["daf-19",]),
+                     species = "C.briggsae")),
+    rbind(data.frame(gene = "fkh-8",
+                     time = c("100_130", "130_170",
+                              "170_210", "210_270", "270_330",
+                              "330_390", "390_450", "450_510",
+                              "510_580", "580_650", "650_710"),
+                     expression = unlist(CN_TPMLineageList[["C.elegans"]][c("fkh-8"),]),
+                     norm_expression = unlist(CN_TPMLineageList[["C.elegans"]][c("fkh-8"),]) / max(CN_TPMLineageList[["C.elegans"]]["fkh-8",], CN_TPMLineageList[["C.briggsae"]]["fkh-8",]),
+                     species = "C.elegans"),
+          data.frame(gene = "fkh-8",
+                     time = c("lt_100", "100_130", "130_170",
+                              "170_210", "210_270", "270_330",
+                              "330_390", "390_450", "450_510",
+                              "510_580", "580_650", "650_710", "gt_710"),
+                     expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("fkh-8"),]),
+                     norm_expression = unlist(CN_TPMLineageList[["C.briggsae"]][c("fkh-8"),]) / max(CN_TPMLineageList[["C.elegans"]]["fkh-8",], CN_TPMLineageList[["C.briggsae"]]["fkh-8",]),
+                     species = "C.briggsae"))),
+  rbind(data.frame(gene = "core_cilia",
+                   time = c("100_130", "130_170",
+                            "170_210", "210_270", "270_330",
+                            "330_390", "390_450", "450_510",
+                            "510_580", "580_650", "650_710"),
+                   expression = colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]),
+                   norm_expression = colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]) / max(colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]), colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))])),
+                   species = "C.elegans"),
+        data.frame(gene = "core_cilia",
+                   time = c("lt_100", "100_130", "130_170",
+                            "170_210", "210_270", "270_330",
+                            "330_390", "390_450", "450_510",
+                            "510_580", "580_650", "650_710", "gt_710"),
+                   expression = colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))]),
+                   norm_expression = colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))]) / max(colMeans(core_cilia_cel_exp[,grepl("Ciliated", colnames(core_cilia_cel_exp))]), colMeans(core_cilia_cbr_exp[,grepl("Ciliated", colnames(core_cilia_cbr_exp))])),
+                   species = "C.briggsae")))
 
 
 pdf(paste0(dir, "Plots/supplemental_plots/daf_19_fkh_8_expression.pdf"), width = 5, height = 5.5)
@@ -1850,26 +1888,8 @@ dev.off()
 
 
 ####
-#
+# Gene duplications
 ####
-
-tau_ele = tau_ele  %>% mutate(og_class2 = ifelse(gene %in%
-                                                   genes_1_1_ele, "1_1",
-                                                 ifelse(gene %in% ele_2_1_better_gene, "2:1 better",
-                                                        ifelse(gene %in%
-                                                                 ele_2_1_poorer_gene, "2:1 poorer",
-                                                               ifelse( gene %in% genes_m_m_ele, "m:m",
-                                                                       "other")))))
-
-tau_bri = tau_bri  %>% mutate(og_class2 = ifelse(gene_name %in%
-                                                   genes_1_1_bri, "1_1",
-                                                 ifelse(gene_name %in% bri_1_2_better_gene, "2:1 better",
-                                                        ifelse(gene_name %in%
-                                                                 bri_1_2_poorer_gene, "2:1 poorer",
-                                                               ifelse(
-                                                                 gene_name %in% genes_m_m_bri, "m:m",
-                                                                 "other")))))
-
 
 load(paste0(dir, "Objects/BobDownload_20241120/ele_files_for_fig_5.RData"))
 # ele_2_1_better_gene
@@ -1885,32 +1905,117 @@ load(paste0(dir, "Objects/BobDownload_20241120/bri_files_for_fig_5.RData"))
 # genes_m_m_bri
 # tau_bri
 
-tau_ele$species = "C. elegans"
-tau_bri$species = "C. briggsae"
+cel_dup = tau_ele  %>% mutate(og_class2 = ifelse(gene %in%
+                                                   genes_1_1_ele, "1_1",
+                                                 ifelse(gene %in% ele_2_1_better_gene, "2:1 better",
+                                                        ifelse(gene %in%
+                                                                 ele_2_1_poorer_gene, "2:1 poorer",
+                                                               ifelse( gene %in% genes_m_m_ele, "m:m",
+                                                                       "other")))))
 
-min_exp <- min(c(tau_ele$sum, tau_bri$sum))
-max_exp <- max(c(tau_ele$sum, tau_bri$sum))
+cbr_dup = tau_bri  %>% mutate(og_class2 = ifelse(gene_name %in%
+                                                   genes_1_1_bri, "1_1",
+                                                 ifelse(gene_name %in% bri_1_2_better_gene, "2:1 better",
+                                                        ifelse(gene_name %in%
+                                                                 bri_1_2_poorer_gene, "2:1 poorer",
+                                                               ifelse(
+                                                                 gene_name %in% genes_m_m_bri, "m:m",
+                                                                 "other")))))
 
-wilcox.test(tau_ele[which(tau_ele$og_class2 %in% c("2:1 better", "2:1 poorer")),]$tau_ele, tau_ele[which(tau_ele$og_class2 == "1_1"),]$tau_ele)
-wilcox.test(tau_bri[which(tau_bri$og_class2 %in% c("2:1 better", "2:1 poorer")),]$tau_bri, tau_bri[which(tau_bri$og_class2 == "1_1"),]$tau_bri)
+cel_dup$species = "C. elegans"
+cbr_dup$species = "C. briggsae"
 
-wilcox.test(tau_ele[which(tau_ele$og_class2 %in% c("2:1 better", "2:1 poorer")),]$sum, tau_ele[which(tau_ele$og_class2 == "1_1"),]$sum)
-wilcox.test(tau_bri[which(tau_bri$og_class2 %in% c("2:1 better", "2:1 poorer")),]$sum, tau_bri[which(tau_bri$og_class2 == "1_1"),]$sum)
+min_exp <- min(c(cel_dup$sum, cbr_dup$sum))
+max_exp <- max(c(cel_dup$sum, cbr_dup$sum))
 
-wilcox.test(tau_ele[which(tau_ele$og_class2 == "2:1 better"),]$tau_ele, tau_ele[which(tau_ele$og_class2 == "2:1 poorer"),]$tau_ele)
-wilcox.test(tau_bri[which(tau_bri$og_class2 == "2:1 better"),]$tau_bri, tau_bri[which(tau_bri$og_class2 == "2:1 poorer"),]$tau_bri)
+rownames(cel_dup) <- cel_dup$gene
+rownames(cbr_dup) <- cbr_dup$joint_name
 
-wilcox.test(tau_ele[which(tau_ele$og_class2 == "2:1 better"),]$sum, tau_ele[which(tau_ele$og_class2 == "2:1 poorer"),]$sum)
-wilcox.test(tau_bri[which(tau_bri$og_class2 == "2:1 better"),]$sum, tau_bri[which(tau_bri$og_class2 == "2:1 poorer"),]$sum)
+cel_dup$cel_max_tpm <- apply(TPMJoint[["C.elegans"]][rownames(cel_dup),], 1, max)
+cbr_dup$cbr_max_tpm <- apply(TPMJoint[["C.briggsae"]][rownames(cbr_dup),], 1, max)
 
-rownames(tau_ele) <- tau_ele$gene
-rownames(tau_bri) <- tau_bri$joint_name
+cel_dup$og <- gff_list_mrna[["elegans"]][cel_dup$gene,]$OG
+cbr_dup$og <- gff_list_mrna[["briggsae"]][cbr_dup$joint_name,]$OG
 
-cel_exp_plot <- tau_ele %>%
+cel_dup$og_min_exp <- NA
+cbr_dup$og_min_exp <- NA
+
+cel_dup$og_min_tau <- NA
+cbr_dup$og_min_tau <- NA
+
+all_og <- unique(c(cel_dup$og, cbr_dup$og))
+for(cur_og in all_og[! is.na(all_og)]) {
+  og_min_exp <- min(cel_dup[which(cel_dup$og == cur_og), "cel_max_tpm"], cbr_dup[which(cbr_dup$og == cur_og), "cbr_max_tpm"], na.rm = TRUE)
+  og_min_tau <- min(cel_dup[which(cel_dup$og == cur_og), "tau_ele"], cbr_dup[which(cbr_dup$og == cur_og), "tau_bri"], na.rm = TRUE)
+  
+  if(cur_og %in% cel_dup$og) {
+    cel_dup[which(cel_dup$og == cur_og),]$og_min_exp <- og_min_exp
+    cel_dup[which(cel_dup$og == cur_og),]$og_min_tau <- og_min_tau
+  }
+  
+  if(cur_og %in% cbr_dup$og) {
+    cbr_dup[which(cbr_dup$og == cur_og),]$og_min_exp <- og_min_exp
+    cbr_dup[which(cbr_dup$og == cur_og),]$og_min_tau <- og_min_tau
+  }
+}
+
+cel_dup$og_max_sum <- NA
+cbr_dup$og_max_sum <- NA
+for(cur_og in all_og[! is.na(all_og)]) {
+  if(cur_og %in% cel_dup$og) {
+    cel_dup[which(cel_dup$og == cur_og),]$og_max_sum <- max(cel_dup[which(cel_dup$og == cur_og),]$sum)
+  }
+  
+  if(cur_og %in% cbr_dup$og) {
+    cbr_dup[which(cbr_dup$og == cur_og),]$og_max_sum <- max(cbr_dup[which(cbr_dup$og == cur_og),]$sum)
+  }
+}
+
+cel_dup_filt <- cel_dup[which(cel_dup$og_min_exp > 80),]
+cbr_dup_filt <- cbr_dup[which(cbr_dup$og_min_exp > 80),]
+
+subset_og <- unique(c(cel_dup_filt$og, cbr_dup_filt$og))
+for(cur_og in subset_og[! is.na(subset_og)]) {
+  if(sum(cel_dup_filt[which(cel_dup_filt$og == cur_og),]$og_class2 %in% "2:1 better") > 0) {
+    print(cel_dup_filt[which(cel_dup_filt$og == cur_og),]$gene)
+    print(cel_dup_filt[which(cel_dup_filt$og == cur_og),]$og_class2)
+    print(cel_dup_filt[which(cel_dup_filt$og == cur_og),]$tau_ele)
+  }
+}
+
+# 2:1 in general are expressed at lower levels (Fine)
+wilcox.test(cel_dup[which(cel_dup$og_class2 %in% c("2:1 better", "2:1 poorer")),]$sum, cel_dup[which(cel_dup$og_class2 == "1_1"),]$sum)
+wilcox.test(cbr_dup[which(cbr_dup$og_class2 %in% c("2:1 better", "2:1 poorer")),]$sum, cbr_dup[which(cbr_dup$og_class2 == "1_1"),]$sum)
+
+wilcox.test(cel_dup[which(cel_dup$og_class2 %in% c("2:1 better")),]$og_max_sum, cel_dup[which(cel_dup$og_class2 == "1_1"),]$sum)
+wilcox.test(cbr_dup[which(cbr_dup$og_class2 %in% c("2:1 better")),]$og_max_sum, cbr_dup[which(cbr_dup$og_class2 == "1_1"),]$sum)
+
+# The better match is expressed at higher levels (Fine)
+wilcox.test(cel_dup[which(cel_dup$og_class2 == "2:1 better"),]$sum, cel_dup[which(cel_dup$og_class2 == "2:1 poorer"),]$sum)
+wilcox.test(cbr_dup[which(cbr_dup$og_class2 == "2:1 better"),]$sum, cbr_dup[which(cbr_dup$og_class2 == "2:1 poorer"),]$sum)
+
+# how many reduced (need to fix)
+# summary(cel_dup[which(cel_dup$og_class2 == "2:1 better"),]$sum / cel_dup[which(cel_dup$og_class2 == "2:1 poorer"),]$sum > 1.5)
+# summary(cel_dup[which(cel_dup$og_class2 == "2:1 poorer"),]$sum / cel_dup[which(cel_dup$og_class2 == "2:1 better"),]$sum > 1.5)
+# 
+# summary(cbr_dup[which(cbr_dup$og_class2 == "2:1 better"),]$sum / cbr_dup[which(cbr_dup$og_class2 == "2:1 poorer"),]$sum > 1.5)
+# summary(cbr_dup[which(cbr_dup$og_class2 == "2:1 poorer"),]$sum / cbr_dup[which(cbr_dup$og_class2 == "2:1 better"),]$sum > 1.5)
+
+# Now filtered for only those sets of duplications where all of the genes in the og are expressed at > 80
+wilcox.test(cel_dup_filt[which(cel_dup_filt$og_class2 %in% c("2:1 better", "2:1 poorer")),]$tau_ele, cel_dup_filt[which(cel_dup_filt$og_class2 == "1_1"),]$tau_ele)
+wilcox.test(cbr_dup_filt[which(cbr_dup_filt$og_class2 %in% c("2:1 better", "2:1 poorer")),]$tau_bri, cbr_dup_filt[which(cbr_dup_filt$og_class2 == "1_1"),]$tau_bri)
+
+wilcox.test(cel_dup_filt[which(cel_dup_filt$og_class2 %in% c("2:1 better")),]$og_min_tau, cel_dup_filt[which(cel_dup_filt$og_class2 == "1_1"),]$tau_ele)
+wilcox.test(cbr_dup_filt[which(cbr_dup_filt$og_class2 %in% c("2:1 better")),]$og_min_tau, cbr_dup_filt[which(cbr_dup_filt$og_class2 == "1_1"),]$tau_bri)
+
+wilcox.test(cel_dup_filt[which(cel_dup_filt$og_class2 == "2:1 better"),]$tau_ele, cel_dup_filt[which(cel_dup_filt$og_class2 == "2:1 poorer"),]$tau_ele)
+wilcox.test(cbr_dup_filt[which(cbr_dup_filt$og_class2 == "2:1 better"),]$tau_bri, cbr_dup_filt[which(cbr_dup_filt$og_class2 == "2:1 poorer"),]$tau_bri)
+
+cel_exp_plot <- cel_dup %>%
   ggplot(aes(x = sum, color = og_class2)) +
   geom_density() +
-  geom_vline(xintercept = tau_ele["acdh-6","sum"], color = "red") +
-  geom_vline(xintercept = tau_ele["acdh-5","sum"], color = "red") +
+  geom_vline(xintercept = cel_dup["sod-2", "sum"], color = "red") +
+  geom_vline(xintercept = cel_dup["sod-3", "sum"], color = "red") +
   scale_x_continuous(name = "Total expression (TPM)", trans = "log10",
                      labels = scales::trans_format("log10", scales::math_format(10^.x)),
                      limits = c(1, max_exp),
@@ -1935,10 +2040,10 @@ cel_exp_plot <- tau_ele %>%
         plot.background = element_rect(fill='transparent', color=NA),
         plot.margin = margin(t = 0, r = 2.5, b = 0, l = 2.5, unit = "mm"))
 
-cbr_exp_plot <- tau_bri %>%
+cbr_exp_plot <- cbr_dup %>%
   ggplot(aes(x = sum, color = og_class2)) +
   geom_density() +
-  geom_vline(xintercept = tau_bri["acdh-6","sum"], color = "red") +
+  geom_vline(xintercept = cbr_dup["sod-2","sum"], color = "red") +
   scale_x_continuous(name = "Total expression (TPM)", trans = "log10",
                      labels = scales::trans_format("log10", scales::math_format(10^.x)),
                      limits = c(1, max_exp),
@@ -1962,18 +2067,13 @@ cbr_exp_plot <- tau_bri %>%
         plot.background = element_rect(fill='transparent', color=NA),
         plot.margin = margin(t = 0, r = 2.5, b = 0, l = 2.5, unit = "mm"))
 
+min_tau <- min(c(cel_dup_filt$tau_ele, cbr_dup_filt$tau_bri))
 
-
-
-min_tau <- min(c(tau_ele[tau_ele$max > 80,]$tau_ele, tau_bri[tau_bri$max > 80,]$tau_bri))
-# min_tau <- min(c(tau_ele$tau_ele, tau_bri$tau_bri))
-
-cel_tau_plot <- tau_ele %>%
-  filter(max > 80) %>%
+cel_tau_plot <- cel_dup_filt %>%
   ggplot(aes(x = tau_ele, color = og_class2)) +
   geom_density() +
-  geom_vline(xintercept = tau_ele["acdh-6","tau_ele"], color = "red") +
-  geom_vline(xintercept = tau_ele["acdh-5","tau_ele"], color = "red") +
+  geom_vline(xintercept = cel_dup_filt["sod-2","tau_ele"], color = "red") +
+  geom_vline(xintercept = cel_dup_filt["sod-3","tau_ele"], color = "red") +
   scale_x_continuous(name = "Tau", limits = c(min_tau, 1)) +
   scale_y_continuous(name = "C. elegans") +
   scale_color_manual(values = c('#CC6677','#88CCEE','#DDCC77','#117733', '#332288'),
@@ -1995,11 +2095,10 @@ cel_tau_plot <- tau_ele %>%
         plot.background = element_rect(fill='transparent', color=NA),
         plot.margin = margin(t = 0, r = 2.5, b = 0, l = 2.5, unit = "mm"))
 
-cbr_tau_plot <- tau_bri %>%
-  filter(max > 80) %>%
+cbr_tau_plot <- cbr_dup_filt %>%
   ggplot(aes(x = tau_bri, color = og_class2)) +
   geom_density() +
-  geom_vline(xintercept = tau_bri["acdh-6","tau_bri"], color = "red") +
+  geom_vline(xintercept = cbr_dup_filt["sod-2","tau_bri"], color = "red") +
   scale_x_continuous(name = "Tau", limits = c(min_tau, 1)) +
   scale_y_continuous(name = "C. briggsae") +
   scale_color_manual(values = c('#CC6677','#88CCEE','#DDCC77','#117733', '#332288'),
@@ -2020,9 +2119,9 @@ cbr_tau_plot <- tau_bri %>%
         plot.background = element_rect(fill='transparent', color=NA),
         plot.margin = margin(t = 0, r = 2.5, b = 0, l = 2.5, unit = "mm"))
 
-pdf(paste0(dir, "Plots/supplemental_plots/2_1_expression_tau_patterns.pdf"), height = 5, width = 3.5)
+pdf(paste0(dir, "Plots/supplemental_plots/2_1_expression_tau_patterns_fixed.pdf"), height = 2.5, width = 7)
 plot_grid(plot_grid(cel_exp_plot, cbr_exp_plot, nrow = 2, rel_heights = c(0.8, 1)),
-          plot_grid(cel_tau_plot, cbr_tau_plot, nrow = 2, rel_heights = c(0.8, 1)), nrow = 2)
+          plot_grid(cel_tau_plot, cbr_tau_plot, nrow = 2, rel_heights = c(0.8, 1)), nrow = 1)
 dev.off()
 
 
@@ -2160,3 +2259,116 @@ plot_tpm %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 dev.off()
 
+
+
+# Load Orthogroups.txt
+gene_duplications_og <- read.table("/kimdata/livinlrg/GenomeAnalysis/orthofinder_sans_uteleia/fastas/OrthoFinder/Results_Apr23/Gene_Duplication_Events/Duplications.tsv",
+                                   sep="\t",
+                                   header = TRUE)
+gene_duplications_og <- gene_duplications_og[gene_duplications_og$Support > 0.5,]
+
+# multiple hit
+cur_gene <- "T07F8.1"
+# no match
+
+out <- apply(cel_dup[cel_dup$og_class2 %in% c("2:1 better", "2:1 poorer"),], 1, function(cur_row) {
+  cur_gene <- unlist(cur_row["gene"])
+  temp_1 <- gene_duplications_og[grepl(paste0("CELEG.", gff_list_mrna[["elegans"]][cur_gene, "short_name"], "(,|$)"), gene_duplications_og$Genes.1),]
+  temp_2 <- gene_duplications_og[grepl(paste0("CELEG.", gff_list_mrna[["elegans"]][cur_gene, "short_name"], "(,|$)"), gene_duplications_og$Genes.2),]
+  
+  if(nrow(temp_1) == 1) {
+    if(temp_1$Support < 0.5) {
+      return("low support")
+    } else if(temp_1['Type'] == "Terminal") {
+      return("terminal")
+    } else if(temp_1['Type'] == "Non-Terminal") {
+      return(temp_1['Species.Tree.Node'])
+    }
+  } else if(nrow(temp_2) == 1) {
+    if(temp_2$Support < 0.5) {
+      return("low support")
+    } else if(temp_2['Type'] == "Terminal") {
+      return("terminal")
+    } else if(temp_2['Type'] == "Non-Terminal") {
+      return(temp_2['Species.Tree.Node'])
+    }
+  } else if (nrow(temp_1) == 0 & nrow(temp_2) == 0) {
+    # print(cur_gene)
+    return("No match found")
+  } else {
+    print(temp_1)
+    print(temp_2)
+    return("Multiple matches found")
+  }
+})
+
+cel_dup$age <- NA
+cel_dup[names(out),]$age <- unlist(out)
+
+# terminal
+cel_dup[c("T07F8.1", "ZK686.6", "K05D4.4", "Y17D7A.4", "cyp-33D3"),]$age <- "terminal"
+
+# n4, n2, n0
+table(cel_dup[cel_dup$og_class2 %in% c("2:1 poorer"),]$sum > 80, cel_dup[cel_dup$og_class2 %in% c("2:1 poorer"),]$age)
+
+cel_dup$test_age <- cel_dup$age
+cel_dup[which(cel_dup$test_age %in% c("N0", "N2", "N4")),]$test_age <- "old"
+cel_dup[which(cel_dup$test_age %in% c("Multiple matches found", "No match found")),]$test_age <- NA
+
+chisq.test(table(cel_dup[cel_dup$og_class2 %in% c("2:1 poorer"),]$sum > 80, cel_dup[cel_dup$og_class2 %in% c("2:1 poorer"),]$test_age))
+
+# they are the same
+ogs <- cel_dup[! is.na(cel_dup$age),]$og
+ogs <- ogs[! is.na(ogs)]
+for(cur_og in ogs) {
+  cur_ages <- cel_dup[which(cel_dup$og == cur_og), "age"]
+  if(cur_ages[1] != cur_ages[2]) {
+    print(cur_og)
+  }
+}
+
+out <- apply(cbr_dup[cbr_dup$og_class2 %in% c("2:1 better", "2:1 poorer"),], 1, function(cur_row) {
+  cur_gene <- unlist(cur_row["joint_name"])
+  temp_1 <- gene_duplications_og[grepl(paste0("_", gff_list_mrna[["briggsae"]][cur_gene, "short_name"], "(,|$)"), gene_duplications_og$Genes.1),]
+  temp_2 <- gene_duplications_og[grepl(paste0("_", gff_list_mrna[["briggsae"]][cur_gene, "short_name"], "(,|$)"), gene_duplications_og$Genes.2),]
+  
+  if(nrow(temp_1) == 1) {
+    if(temp_1$Support < 0.5) {
+      return("low support")
+    } else if(temp_1['Type'] == "Terminal") {
+      return("terminal")
+    } else if(temp_1['Type'] == "Non-Terminal") {
+      return(temp_1['Species.Tree.Node'])
+    }
+  } else if(nrow(temp_2) == 1) {
+    if(temp_2$Support < 0.5) {
+      return("low support")
+    } else if(temp_2['Type'] == "Terminal") {
+      return("terminal")
+    } else if(temp_2['Type'] == "Non-Terminal") {
+      return(temp_2['Species.Tree.Node'])
+    }
+  } else if (nrow(temp_1) == 0 & nrow(temp_2) == 0) {
+    # print(cur_gene)
+    return("No match found")
+  } else {
+    print(temp_1)
+    print(temp_2)
+    return("Multiple matches found")
+  }
+})
+
+cbr_dup$age <- NA
+cbr_dup[names(out),]$age <- unlist(out)
+
+#terminal
+cbr_dup[c("CBG15349", "CBG00609", "Cbr-cwf-19L2",
+          "CBG22991", "CBG22992"),]$age <- "terminal"
+
+
+cbr_dup$test_age <- cbr_dup$age
+cbr_dup[which(cbr_dup$test_age %in% c("N0", "N11", "N2", "N5", "N7", "N9")),]$test_age <- "old"
+cbr_dup[which(cbr_dup$test_age %in% c("Multiple matches found", "No match found")),]$test_age <- NA
+
+chisq.test(table(cbr_dup[cbr_dup$og_class2 %in% c("2:1 poorer"),]$sum > 80,
+                 cbr_dup[cbr_dup$og_class2 %in% c("2:1 poorer"),]$test_age))

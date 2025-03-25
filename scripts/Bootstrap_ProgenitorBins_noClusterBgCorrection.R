@@ -136,6 +136,7 @@ TPMListBootstrapProSubset[["C.elegans"]] <- TPMListBootstrapProSubset[["C.elegan
 saveRDS(TPMListBootstrapPro, paste0(dir, "Objects/TPMListBootstrapPro_CellCorrection.rds"))
 saveRDS(TPMListBootstrapProSubset, paste0(dir, "Objects/TPMListBootstrapProSubset_CellCorrection.rds"))
 
+TPMListBootstrapPro <- readRDS(paste0(dir, "Objects/TPMListBootstrapPro_CellCorrection.rds"))
 
 ## Lower quantile bootstrap cutoff
 TPMDataframeBootstrapPro <- data.frame(matrix(ncol = 8, nrow = 0))
@@ -152,6 +153,8 @@ for(cur_species in names(bootstrapTPMProList)) {
     }
   }
 }
+
+saveRDS(TPMDataframeBootstrapPro, paste0(dir, "Objects/TPMDataframeBootstrapPro_CellCorrection.rds"))
 
 BinarizeBootstrapListPro <- list()
 for(cur_species in levels(factor(TPMDataframeBootstrapPro$species))) {
@@ -175,6 +178,31 @@ BinarizeBootstrapListProSubset[["C.elegans"]] <- BinarizeBootstrapListProSubset[
                                                                                                      rownames(BinarizeBootstrapListProSubset[["C.elegans"]])),]
 
 saveRDS(BinarizeBootstrapListProSubset, paste0(dir, "Objects/BinarizeBootstrapListProSubset_CellCorrection.rds"))
+
+
+## Upper quantile bootstrap cutoff
+BinarizeBootstrapListProUpper <- list()
+for(cur_species in levels(factor(TPMDataframeBootstrapPro$species))) {
+  BinarizeBootstrapListProUpper[[cur_species]] <- dcast(TPMDataframeBootstrapPro[TPMDataframeBootstrapPro$species == cur_species, c(1,2,7)], gene ~ cell.type, value.var = "ci_95")
+  rownames(BinarizeBootstrapListProUpper[[cur_species]]) <- BinarizeBootstrapListProUpper[[cur_species]]$gene
+  BinarizeBootstrapListProUpper[[cur_species]]$gene <- NULL
+  BinarizeBootstrapListProUpper[[cur_species]] <- BinarizeBootstrapListProUpper[[cur_species]][match(rownames(TPMListBootstrapPro[[cur_species]]), rownames(BinarizeBootstrapListProUpper[[cur_species]])),]
+}
+
+BinarizeBootstrapListProUpper[["C.elegans"]] <- BinarizeBootstrapListProUpper[["C.elegans"]][,match(colnames(BinarizeBootstrapListProUpper[["C.elegans"]]), colnames(BinarizeBootstrapListProUpper[["C.elegans"]]))]
+BinarizeBootstrapListProUpper[["C.briggsae"]] <- BinarizeBootstrapListProUpper[["C.briggsae"]][,match(colnames(BinarizeBootstrapListProUpper[["C.briggsae"]]), colnames(BinarizeBootstrapListProUpper[["C.briggsae"]]))]
+
+saveRDS(BinarizeBootstrapListProUpper, paste0(dir, "Objects/BinarizeBootstrapListUpperPro_CellCorrection.rds"))
+
+BinarizeBootstrapListProSubsetUpper <- list()
+BinarizeBootstrapListProSubsetUpper[["C.elegans"]] <- BinarizeBootstrapListProUpper[["C.elegans"]][rownames(BinarizeBootstrapListProUpper[["C.elegans"]]) %in% rownames(BinarizeBootstrapListProUpper[["C.briggsae"]]),]
+BinarizeBootstrapListProSubsetUpper[["C.briggsae"]] <- BinarizeBootstrapListProUpper[["C.briggsae"]][rownames(BinarizeBootstrapListProUpper[["C.briggsae"]]) %in% rownames(BinarizeBootstrapListProUpper[["C.elegans"]]),]
+
+# Reordered
+BinarizeBootstrapListProSubsetUpper[["C.elegans"]] <- BinarizeBootstrapListProSubsetUpper[["C.elegans"]][match(rownames(BinarizeBootstrapListProSubsetUpper[["C.briggsae"]]),
+                                                                                                     rownames(BinarizeBootstrapListProSubsetUpper[["C.elegans"]])),]
+
+saveRDS(BinarizeBootstrapListProSubsetUpper, paste0(dir, "Objects/BinarizeBootstrapListUpperProSubset_CellCorrection.rds"))
 
 
 ################################################
