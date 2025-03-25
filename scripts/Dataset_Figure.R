@@ -149,6 +149,8 @@ BarcodeBinsList <- readRDS(paste0(dir, "Objects/BarcodeBinsList.rds"))
 ProBarcodeBinsList <- readRDS(paste0(dir, "Objects/ProBarcodeBinsList.rds"))
 JointBarcodeBinsList <- readRDS(paste0(dir, "Objects/JointBarcodeBinsList.rds"))
 
+cell_data <- readRDS(paste0(dir, "Objects/cell_data_joint_mean_cell_bg.rds"))
+
 cell_count <- lapply(c("C.elegans", "C.briggsae"), function(cur_species) {
   data.frame(cell_count = unlist(lapply(JointBarcodeBinsList[[cur_species]], function(cell_type) {
     length(unlist(cell_type))
@@ -163,6 +165,8 @@ names(cell_count) <- c("C.elegans", "C.briggsae")
 cell_count[["C.elegans"]]$cell_prop <- (cell_count[["C.elegans"]]$cell_count / sum(cell_count[["C.elegans"]]$cell_count)) * 100
 cell_count[["C.briggsae"]]$cell_prop <- (cell_count[["C.briggsae"]]$cell_count / sum(cell_count[["C.briggsae"]]$cell_count)) * 100
 
+CellTypeCount <- left_join(cell_count[["C.elegans"]], cell_count[["C.briggsae"]], by = "cell_type", suffix = c("_cel", "_cbr"))
+
 CellTypeCount <- left_join(CellTypeCount, cell_data[,c("cell_type", "cell_class", "div_stage")], by = "cell_type")
 CellTypeCount$plot <- CellTypeCount$cell_class
 CellTypeCount[which(CellTypeCount$cell_class == "progenitor"),]$plot <- as.character(CellTypeCount[which(CellTypeCount$cell_class == "progenitor"),]$div_stage)
@@ -170,13 +174,14 @@ CellTypeCount[which(CellTypeCount$cell_class == "progenitor"),]$plot <- as.chara
 pdf(paste0(dir, "Plots/data_figure/cell_count_prop.pdf"), height = 5, width = 5)
 CellTypeCount %>%
   filter(! cell_type %in% "hyp3") %>%
-ggplot(aes(x = cell_prop_elegans,
-                              y = cell_prop_briggsae,
-                              label = cell_type, fill = plot, color = plot)) +
-  # geom_point(pch = 21, color = "black") +
-  geom_point(pch = 21) +
+ggplot(aes(x = cell_prop_cel,
+           y = cell_prop_cbr,
+           label = cell_type,
+           fill = plot,
+           color = plot,
+           shape = ifelse(cell_class == "progenitor", "pro", "term"))) +
+  geom_point(alpha = 0.8) +
   geom_abline(slope = 1, alpha = 0.5, linetype = "dashed") +
-  # geom_text_repel(show.legend=FALSE) +
   guides(label = "none") + 
   scale_x_continuous(name = "Percent of C. elegans cell types",
                      trans = "log10", limits = c(0.002, 7.5)) +
@@ -195,7 +200,8 @@ ggplot(aes(x = cell_prop_elegans,
                                '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
                                'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
                                'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
-                               'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1"), 0.1)) + 
+                               'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1"), 0.1)) +
+  scale_shape_manual(limits = c("pro", "term"), values = c(22, 21)) +
   theme(legend.title = element_blank(),
         legend.position = "none",
         rect = element_rect(fill = "transparent"),
@@ -211,6 +217,56 @@ ggplot(aes(x = cell_prop_elegans,
         legend.box.background = element_rect(colour = "transparent", fill = "transparent"),
         legend.key = element_rect(colour = "transparent", fill = "transparent"))
 dev.off()
+
+
+# legend
+pdf(paste0(dir, "Plots/data_figure/cell_count_prop_legend.pdf"), height = 5, width = 10)
+CellTypeCount %>%
+  filter(! cell_type %in% "hyp3") %>%
+  ggplot(aes(x = cell_prop_cel,
+             y = cell_prop_cbr,
+             label = cell_type,
+             fill = plot,
+             color = plot,
+             shape = ifelse(cell_class == "progenitor", "pro", "term"))) +
+  geom_point(alpha = 0.8) +
+  geom_abline(slope = 1, alpha = 0.5, linetype = "dashed") +
+  guides(label = "none") + 
+  scale_x_continuous(name = "Percent of C. elegans cell types",
+                     trans = "log10", limits = c(0.002, 7.5)) +
+  scale_y_continuous(name = "Percent of C. briggsae cell types",
+                     trans = "log10", limits = c(0.002, 7.5)) +
+  scale_fill_manual(values = c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                               '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                               'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                               'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                               'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1")) + 
+  scale_color_manual(limits = c('15', '28', '50', '100', '200', '350', "600",
+                                'Ciliated neurons', 'Germline', 'Glia and excretory',
+                                'Hypodermis and seam', 'Intestine', 'Muscle', 'Mesoderm',
+                                'Non-ciliated neurons', 'Pharynx and rectal'), 
+                     values = colorspace::darken(c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                                                   '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                                                   'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                                                   'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                                                   'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1"), 0.1)) +
+  scale_shape_manual(limits = c("pro", "term"), values = c(22, 21)) +
+  theme(legend.title = element_blank(),
+        legend.position = "right",
+        rect = element_rect(fill = "transparent"),
+        axis.line = element_line(color="grey80", size=1),
+        axis.text = element_text(size = 16),
+        axis.title = element_text(size = 16),
+        axis.title.x = element_text(color = "#009E73"),
+        axis.title.y = element_text(color = "#56B4E9"),
+        panel.grid.major = element_line(color="grey80", size=0.5),
+        panel.grid.minor = element_line(color="grey80", size=0.1),
+        panel.background = element_rect(fill='transparent'), #transparent panel bg
+        plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
+        legend.box.background = element_rect(colour = "transparent", fill = "transparent"),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"))
+dev.off()
+
 
 
 #############

@@ -56,7 +56,7 @@ deg <- readRDS(paste0(dir, "Objects/DEG_df_filt_metadata_cell_bg.rds"))
 
 # for geom_text_repel
 gene_data$plot_name <- NA
-gene_data[c("rab-7", "vab-15", "lin-59", "pha-4", "ceh-53", "T04A6.1"),]$plot_name <- c("rab-7", "vab-15", "lin-59", "pha-4", "ceh-53", "T04A6.1")
+gene_data[c("rab-7", "vab-15", "pha-4", "hlh-4", "eef-2", "T04A6.1"),]$plot_name <- c("rab-7", "vab-15", "pha-4", "hlh-4", "eef-2", "T04A6.1")
 
 #############
 # Tau plots #
@@ -285,17 +285,21 @@ ggplot() +
   geom_rect(data = gene_data[gene_data$gene == "pha-4",],
             aes(xmin = jsd_lower_joint, xmax = jsd_upper_joint, ymin = -Inf, ymax = Inf),
             color = "red3", fill = "red", alpha = 0.25, size = 0.1) +
-  geom_rect(data = gene_data[gene_data$gene == "ceh-53",],
+  geom_rect(data = gene_data[gene_data$gene == "eef-2",],
             aes(xmin = jsd_lower_joint, xmax = jsd_upper_joint, ymin = -Inf, ymax = Inf),
             color = "red3", fill = "red", alpha = 0.25, size = 0.1) +
   geom_rect(data = gene_data[gene_data$gene == "T04A6.1",],
             aes(xmin = jsd_lower_joint, xmax = jsd_upper_joint, ymin = -Inf, ymax = Inf),
             color = "red3", fill = "red", alpha = 0.25, size = 0.1) +
+  geom_rect(data = gene_data[gene_data$gene == "hlh-4",],
+            aes(xmin = jsd_lower_joint, xmax = jsd_upper_joint, ymin = -Inf, ymax = Inf),
+            color = "red3", fill = "red", alpha = 0.25, size = 0.1) +
   geom_vline(aes(xintercept = gene_data[gene_data$gene == "rab-7", "jsd_median_joint"]), color = "red") +
   geom_vline(aes(xintercept = gene_data[gene_data$gene == "vab-15", "jsd_median_joint"]), color = "red") +
   geom_vline(aes(xintercept = gene_data[gene_data$gene == "pha-4", "jsd_median_joint"]), color = "red") +
-  geom_vline(aes(xintercept = gene_data[gene_data$gene == "ceh-53", "jsd_median_joint"]), color = "red") +
+  geom_vline(aes(xintercept = gene_data[gene_data$gene == "eef-2", "jsd_median_joint"]), color = "red") +
   geom_vline(aes(xintercept = gene_data[gene_data$gene == "T04A6.1", "jsd_median_joint"]), color = "red") +
+  geom_vline(aes(xintercept = gene_data[gene_data$gene == "hlh-4", "jsd_median_joint"]), color = "red") +
   scale_x_continuous(name = "Jensen-Shannon Distance", limits = c(0, 1)) +
   theme(panel.background = element_rect(fill='transparent'), #transparent panel bg
         plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
@@ -315,7 +319,7 @@ dev.off()
 # jsd btwn species #
 ####################
 
-pdf(paste0(dir, "Plots/gene_figure_plots/term_to_pro_jsd.pdf"), width = 5, height = 5)
+pdf(paste0(dir, "Plots/gene_figure_plots/term_to_pro_jsd_for_rupa.pdf"), width = 5, height = 5)
 ggMarginal(gene_data %>%
              filter(max_tpm_term > 80 & max_tpm_pro > 80) %>% 
              arrange(abs(log2(max_tpm_term/max_tpm_pro))) %>%
@@ -1092,11 +1096,7 @@ lm(jsd_median_joint ~ log2(max_tpm), gene_data[gene_data$max_tpm > 80,])
 
 cor(gene_data[gene_data$max_tpm > 80,]$jsd_median_joint, log2(gene_data[gene_data$max_tpm > 80,]$max_tpm))
 
-
 lm(jsd_median_joint ~ log2(max_tpm + 1), gene_data)
-
-
-
 
 for(cur_gene in c("bath-42", "nphp-4", "chca-1", "rpac-19", "imb-2", "try-1", "acox-1.6")) {
   pdf(paste0(dir, "Plots/gene_figure_plots/gene_plots/", cur_gene,".pdf"), width = 3, height = 3)

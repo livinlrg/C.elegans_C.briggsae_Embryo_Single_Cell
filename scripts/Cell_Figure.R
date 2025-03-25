@@ -69,14 +69,14 @@ for(cell_type in c("BWM_middle", "ASG")) {
   TPMPlot_List[[cell_type]] <- ggplot() +
     geom_point(aes_(x = mean_TPM[cell_plot_df$comb_marker == "Not a marker", cell_type] + 1,
                     y = comp_TPM[cell_plot_df$comb_marker == "Not a marker", cell_type],
-                    color = cell_plot_df[cell_plot_df$comb_marker == "Not a marker",]$comb_marker),
+                    fill = cell_plot_df[cell_plot_df$comb_marker == "Not a marker",]$comb_marker),
                alpha = 0.5, size = 1, stroke = 0.3) +
     geom_point(aes_(x = mean_TPM[cell_plot_df$comb_marker != "Not a marker", cell_type] + 1,
                     y = comp_TPM[cell_plot_df$comb_marker != "Not a marker", cell_type],
-                    color = cell_plot_df[cell_plot_df$comb_marker != "Not a marker",]$comb_marker),
-               alpha = 0.5, size = 1, stroke = 0.3) +
+                    fill = cell_plot_df[cell_plot_df$comb_marker != "Not a marker",]$comb_marker),
+               alpha = 1, size = 1, stroke = 0.3, shape = 21) +
     guides(colour = guide_legend(override.aes = list(size=4))) +
-    scale_color_manual(name = "Markers", breaks = c("C. elegans marker", "C. briggsae marker", "Joint marker", "Not a marker"),
+    scale_fill_manual(name = "Markers", breaks = c("C. elegans marker", "C. briggsae marker", "Joint marker", "Not a marker"),
                        labels = c("C. elegans marker", "C. briggsae marker", "Joint marker", "Neither"),
                        values = c("#009E73", "#56B4E9", "#CC79A7", "black")) +
     scale_x_continuous(name = paste0("Mean ", cell_type," TPM"), limits = c(1, 46000), trans = "log2") +
@@ -114,9 +114,9 @@ for(cell_type in c("BWM_middle", "ASG")) {
                                          rel_heights = c(0.25, 1), rel_widths = c(1, 0.25))
 }
 
-pdf(paste0(dir, "Plots/cell_figure_plots/TPM_ASG_BWM_middle.pdf"), width = 4, height = 8)
+pdf(paste0(dir, "Plots/cell_figure_plots/TPM_ASG_BWM_middle.pdf"), width = 8, height = 4)
 plot_grid(TPMPlot_List[["BWM_middle"]],
-          TPMPlot_List[["ASG"]], align = "hv", nrow = 2)
+          TPMPlot_List[["ASG"]], align = "hv", nrow = 1)
 dev.off()
 
 ##############
@@ -1018,11 +1018,9 @@ dev.off()
 
 temp <- cell_data[, c("jsd_median", "cor_median", "cell_type", "cell_class")] %>% filter(cell_type != "ABarppxa")
 
-
 temp$cor_median <- 1 - temp$cor_median
 
-reg <- lm(formula = jsd_median ~ cor_median,
-          data = temp)                  
+reg <- lm(formula = jsd_median ~ cor_median, data = temp)                  
 
 #get intercept and slope value
 coeff <- coefficients(reg)          
@@ -1258,15 +1256,16 @@ coeff <- coefficients(reg)
 intercept <-coeff[1]
 slope <- coeff[2]
 
-pdf(paste0(dir, "Plots/cell_figure_plots/num_markers.pdf"), height = 5, width = 5)
+pdf(paste0(dir, "Plots/cell_figure_plots/num_markers.pdf"), height = 4, width = 4)
 ggplot(data = marker_count, aes(x = cel_markers,
                                 y = cbr_markers,
                                 label = cell_type,
                                 color = plot,
-                                fill = plot)) + 
-  geom_point(pch = 21, alpha = 0.8) +
+                                fill = plot,
+                                shape = ifelse(cell_class == "progenitor", "pro", "term"))) + 
+  geom_point(alpha = 0.8) +
   geom_text_repel(show.legend = FALSE) +
-  annotate("text", x = c(-Inf), y = c(Inf), hjust = -0.1, vjust = 1, color = "black",
+  annotate("text", x = c(-Inf), y = 1800, hjust = -0.1, vjust = 1, color = "black",
            label = bquote("Adj. " ~ R ^ 2 ~ " = " ~ .(round(summary(reg)$adj.r.squared, 2)))) +
   geom_abline(intercept = intercept,
               slope = slope,
@@ -1290,13 +1289,14 @@ ggplot(data = marker_count, aes(x = cel_markers,
                                                    'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
                                                    'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
                                                    'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1"), 0.1)) +
+  scale_shape_manual(values = c("pro" = 22, "term" = 21)) +
   theme(legend.title= element_blank(),
         legend.position = "none",
         rect = element_rect(fill = "transparent"),
         axis.line = element_line(color="grey80", size=1),
-        axis.title.x = element_text(color = "#009E73", size = 18),
-        axis.title.y = element_text(color = "#56B4E9", size = 18),
-        axis.text = element_text(size = 14),
+        axis.title.x = element_text(color = "#009E73", size = 12),
+        axis.title.y = element_text(color = "#56B4E9", size = 12),
+        axis.text = element_text(size = 12),
         panel.grid.major = element_line(color="grey80", size=0.25),
         panel.grid.minor = element_line(color="grey80", size=0.05),
         panel.background = element_rect(fill='transparent'), #transparent panel bg
@@ -1338,18 +1338,29 @@ pdf(paste0(dir, "Plots/cell_figure_plots/num_markers_embryo_time_cell_class.pdf"
 ggplot(data = marker_count, aes(x = embryo_time,
                                 y = mean_markers,
                                 label = cell_type,
-                                color = ifelse(marker_count$cell_class == "progenitor", unfactor(marker_count$div_stage), marker_count$cell_class))) +
+                                color = ifelse(marker_count$cell_class == "progenitor", unfactor(marker_count$div_stage), marker_count$cell_class),
+                                fill = ifelse(marker_count$cell_class == "progenitor", unfactor(marker_count$div_stage), marker_count$cell_class),
+                                shape = ifelse(cell_class == "progenitor", "pro", "term"))) +
   geom_jitter(alpha = 0.8) +
   geom_text_repel(show.legend = FALSE) +
   scale_x_continuous(name = "Median embryo time") +
   scale_y_continuous(name = "Marker count") +
   guides(color = guide_legend(ncol = 3), label = "none") +
-  scale_color_manual(values = c('Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
-                                'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
-                                'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1",
-                                '15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
-                                '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF",
-                                "600" = "#08306BFF")) +
+  scale_fill_manual(values = c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                               '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                               'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                               'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                               'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1")) + 
+  scale_color_manual(limits = c('15', '28', '50', '100', '200', '350', "600",
+                                'Ciliated neurons', 'Germline', 'Glia and excretory',
+                                'Hypodermis and seam', 'Intestine', 'Muscle', 'Mesoderm',
+                                'Non-ciliated neurons', 'Pharynx and rectal'), 
+                     values = colorspace::darken(c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                                                   '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                                                   'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                                                   'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                                                   'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1"), 0.1)) +
+  scale_shape_manual(limits = c("pro", "term"), values = c(22, 21)) +
   theme(legend.title= element_blank(),
         legend.position = "none",
         rect = element_rect(fill = "transparent"),
@@ -1400,7 +1411,9 @@ pdf(paste0(dir, "Plots/cell_figure_plots/num_private_markers_embryo_time_cell_cl
 ggplot(data = marker_count, aes(x = embryo_time,
                                 y = mean_markers_private,
                                 label = cell_type,
-                                color = ifelse(marker_count$cell_class == "progenitor", marker_count$lineage_group, marker_count$cell_class))) +
+                                color = ifelse(marker_count$cell_class == "progenitor", marker_count$lineage_group, marker_count$cell_class),
+                                fill = ifelse(marker_count$cell_class == "progenitor", marker_count$lineage_group, marker_count$cell_class),
+                                shape = ifelse(cell_class == "progenitor", "pro", "term"))) +
   geom_jitter(alpha = 0.8) +
   geom_text_repel(show.legend = FALSE) +
   scale_x_continuous(name = "Median embryo time") +
@@ -1432,18 +1445,29 @@ pdf(paste0(dir, "Plots/cell_figure_plots/num_private_markers_embryo_time_cell_cl
 ggplot(data = marker_count, aes(x = embryo_time,
                                 y = mean_markers_private,
                                 label = cell_type,
-                                color = ifelse(marker_count$cell_class == "progenitor", unfactor(marker_count$div_stage), marker_count$cell_class))) +
+                                color = ifelse(marker_count$cell_class == "progenitor", unfactor(marker_count$div_stage), marker_count$cell_class),
+                                fill = ifelse(marker_count$cell_class == "progenitor", unfactor(marker_count$div_stage), marker_count$cell_class),
+                                shape = ifelse(cell_class == "progenitor", "pro", "term"))) +
   geom_jitter(alpha = 0.8) +
   geom_text_repel(show.legend = FALSE) +
   scale_x_continuous(name = "Median embryo time") +
   scale_y_continuous(name = "Non-1:1 marker count") +
   guides(color = guide_legend(ncol = 3), label = "none") +
-  scale_color_manual(values = c('Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
-                                'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
-                                'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1",
-                                '15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
-                                '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF",
-                                "600" = "#08306BFF")) +
+  scale_fill_manual(values = c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                               '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                               'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                               'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                               'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1")) + 
+  scale_color_manual(limits = c('15', '28', '50', '100', '200', '350', "600",
+                                'Ciliated neurons', 'Germline', 'Glia and excretory',
+                                'Hypodermis and seam', 'Intestine', 'Muscle', 'Mesoderm',
+                                'Non-ciliated neurons', 'Pharynx and rectal'), 
+                     values = colorspace::darken(c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                                                   '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                                                   'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                                                   'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                                                   'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1"), 0.1)) +
+  scale_shape_manual(limits = c("pro", "term"), values = c(22, 21)) +
   theme(legend.title= element_blank(),
         legend.position = "none",
         rect = element_rect(fill = "transparent"),
@@ -1717,7 +1741,6 @@ joint_markers <- list()
 joint_markers[["C.elegans"]] <- rbind(term_markers[["C.elegans"]][,colnames(pro_markers[["C.elegans"]])], pro_markers[["C.elegans"]])
 joint_markers[["C.briggsae"]] <- rbind(term_markers[["C.briggsae"]][,colnames(pro_markers[["C.briggsae"]])], pro_markers[["C.briggsae"]])
 
-
 cel_markers <- joint_markers[["C.elegans"]][joint_markers[["C.elegans"]]$p_val_adj.cel < 0.05 &
                                               joint_markers[["C.elegans"]]$avg_log2FC.cel >= 1 &
                                               joint_markers[["C.elegans"]]$cel_tpm_log2fc >= 1 &
@@ -1791,11 +1814,11 @@ coeff <- coefficients(reg)
 intercept <- coeff[1]
 slope <- coeff[2]
 
-pdf(paste0(dir, "Plots/cell_figure_plots/fraction_almost_shared_markers_jsd.pdf"), height = 5, width = 5)
+pdf(paste0(dir, "Plots/cell_figure_plots/fraction_almost_shared_markers_jsd.pdf"), height = 4, width = 4)
 cell_data %>% filter(cell_type != "ABarppxa") %>%
   filter(cell_class != "progenitor") %>%
-ggplot(aes(x = fraction_almost_shared, y = jsd_median, label = cell_type, color = cell_class)) +
-  geom_point() +
+ggplot(aes(x = fraction_almost_shared, y = jsd_median, label = cell_type, color = cell_class, fill = cell_class)) +
+  geom_point(alpha = 0.8, shape = 21) +
   geom_text_repel(show.legend = FALSE) +
   annotate("text", x = c(0.65), y = c(0.6), hjust = -0.1, vjust = 1, color = "black",
            label = bquote("Adj. " ~ R ^ 2 ~ " = " ~ .(round(summary(reg)$adj.r.squared, 2)))) +
@@ -1804,9 +1827,20 @@ ggplot(aes(x = fraction_almost_shared, y = jsd_median, label = cell_type, color 
               color="black", linetype = "dashed") +
   scale_y_continuous(name = "Cell distance (Jensen-Shannon Distance)") +
   scale_x_continuous(name = "Fraction of cell type markers shared") +
-  scale_color_manual(values = c('Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
-                                'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
-                                'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1", 'progenitor' = "grey30")) +
+  scale_fill_manual(values = c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                               '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                               'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                               'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                               'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1")) + 
+  scale_color_manual(limits = c('15', '28', '50', '100', '200', '350', "600",
+                                'Ciliated neurons', 'Germline', 'Glia and excretory',
+                                'Hypodermis and seam', 'Intestine', 'Muscle', 'Mesoderm',
+                                'Non-ciliated neurons', 'Pharynx and rectal'), 
+                     values = colorspace::darken(c('15' = "#C6DBEFFF", '28' = "#9ECAE1FF", '50' = "#6BAED6FF",
+                                                   '100' = "#4292C6FF", '200' = "#2171B5FF", '350' = "#08519CFF", "600" = "#08306BFF",
+                                                   'Ciliated neurons' = "#e15759", 'Germline' = "#bab0ac", 'Glia and excretory' = "#edc948",
+                                                   'Hypodermis and seam' = "#59a14f", 'Intestine' = "#f28e2b", 'Muscle' = "#76b7b2", 'Mesoderm' = "#9c755f",
+                                                   'Non-ciliated neurons' = "#4e79a7", 'Pharynx and rectal' = "#b07aa1"), 0.1)) +
   guides(color = guide_legend(ncol = 3), label = "none") +
   theme(legend.title= element_blank(),
         legend.position = "none",
@@ -2028,7 +2062,7 @@ marker_types_df %>%
   facet_wrap(~type, nrow = 2)
 dev.off()
 
-pdf(paste0(dir, "Plots/big_boy_marker_enrich_all_class_tier_1_filtered_horizontal.pdf"), height = 3.5, width = 6)
+pdf(paste0(dir, "Plots/big_boy_marker_enrich_all_class_tier_1_filtered_horizontal.pdf"), height = 4, width = 6)
 marker_types_df %>%
   filter(Category %in% c("Muscle function", "Neuronal function",
                          "Ribosome", "Cilia", "Cell cycle",
@@ -2038,7 +2072,7 @@ marker_types_df %>%
   ggplot(aes(x = Category, y = cell_class, fill = Fold)) +
   geom_tile(color="grey80",  linewidth = 0.1) +
   facet_wrap(~dataset, scale="free_y", nrow=4)+
-  geom_text(aes(label = signif), vjust = 0.65, hjust = 0.5, size = 2) +
+  geom_text(aes(label = signif), vjust = 0.65, hjust = 0.5, size = 4) +
   geom_segment(x = 0, xend = Inf, y = 0, yend = 0, color = "grey80", linewidth = 2) +
   geom_segment(x = 0, xend = Inf, y = Inf, yend = Inf, color = "grey80", linewidth = 2) +
   geom_segment(x = 0, xend = 0, y = 0, yend = 0, color = "grey80", linewidth = 2) +
@@ -2055,6 +2089,7 @@ marker_types_df %>%
         plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
         axis.line = element_line(color="grey80", size=1),
         panel.grid = element_line(color="grey80", size=0.25),
+        axis.text = element_text(size = 10),
         legend.box.background = element_rect(colour = "transparent", fill = "transparent"),
         legend.key = element_rect(colour = "transparent", fill = "transparent"),
         legend.position = "none") +
@@ -2062,6 +2097,7 @@ marker_types_df %>%
 dev.off()
 
 saveRDS(marker_types_df, paste0(dir, "Objects/marker_types_df.rds"))
+marker_types_df <- readRDS(paste0(dir, "Objects/marker_types_df.rds"))
 
 ###################
 # Non-1:1 markers #
