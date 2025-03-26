@@ -1,0 +1,62 @@
+SEEDS = [str(i) for i in range(1, 1001, 1)]
+out_path = "/kimdata/livinlrg/scAnalysis/WS290/Objects/scenic/cell_based/cel_marathon"
+scenic_path = "/kimdata/livinlrg/scAnalysis/WS290/Objects/scenic"
+pyscenic_path = "~/Software/miniconda3/envs/pyscenic/bin/"
+
+rule all:
+    input:
+        expand(out_path + "/grn/WS290_elegans_pyscenic_grn_tpm.grnboost2.snake.{seed}.csv", seed=SEEDS),
+        expand(out_path + "/ctx/WS290_elegans_tpm_reg.snake.{seed}.csv", seed=SEEDS)
+rule grn:
+    input:
+        expression = scenic_path + "/cel_expression_log.csv",
+        tfs = scenic_path + "/cel_tfs.txt"
+    output:
+        grn_out = out_path + "/grn/WS290_elegans_pyscenic_grn_tpm.grnboost2.snake.{seed}.csv"
+    params:
+        scenic_path = "/kimdata/livinlrg/scAnalysis/WS290/Objects/scenic"
+    threads: 4  # specify the number of threads to use
+    shell:
+        """
+        source ~/Software/miniconda3/etc/profile.d/conda.sh
+        conda activate pyscenic
+        pyscenic grn \
+        -m grnboost2 \
+        --seed {wildcards.seed} \
+        --num_workers 4 \
+        -o {output.grn_out} \
+        {input.expression} \
+        {input.tfs} \
+        -t
+        """
+
+rule ctx:
+    input:
+        grn_output = rules.grn.output,
+        expression = scenic_path + "/cel_expression_log.csv",
+        motifs = scenic_path + "/cel_chipseq_motif_table.tbl",
+        gene_rankings = scenic_path + "/elegans_WS290_cistarget/elegans_WS290_500bp.genes_vs_motifs.rankings.feather",
+        gene_body_rankings = scenic_path + "/elegans_WS290_cistarget/WS290_elegans_2000bp_gene_body.genes_vs_motifs.rankings.feather",
+        gene_track_rankings = scenic_path + "/elegans_WS290_cistarget/elegans_chipseq_WS290.genes_vs_tracks.rankings.feather"
+    output:
+        ctx_out = out_path + "/ctx/WS290_elegans_tpm_reg.snake.{seed}.csv"
+    params:
+        scenic_path = "/kimdata/livinlrg/scAnalysis/WS290/Objects/scenic/cell_based"
+    threads: 4  # specify the number of threads to use
+    shell:
+        """
+        source ~/Software/miniconda3/etc/profile.d/conda.sh
+        conda activate pyscenic
+        pyscenic ctx \
+        --expression_mtx_fname {input.expression} \
+        --mask_dropouts \
+        --min_genes 8 \
+        --num_workers 4 \
+        --annotations_fname {input.motifs} \
+        -o {output.ctx_out} \
+        {input.grn_output} \
+        {input.gene_rankings} \
+        {input.gene_body_rankings} \
+        {input.gene_track_rankings} \
+        -t
+        """
