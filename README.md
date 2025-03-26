@@ -257,7 +257,7 @@ The gene summaries that are uploaded in the gene_plots/ directory describe how t
    </details>
 </details>
 
-
+Gene plots summary:
  1. Global UMAP showing the expression of your gene of interest. 
  2. Cell subset UMAP showing the expression of your gene of interest. The choice of which UMAP is shown is based on which cell-type shows maximum expression across all cell-types between the two species.
  3. Terminal cell-type comparative TPM values shown in log2 space. The cell-types are summarized by their cell class.
@@ -266,6 +266,55 @@ The gene summaries that are uploaded in the gene_plots/ directory describe how t
   - Gene expression patern distance shown as the Jensen-Shannon Distance (JSD) calculated on the bootstrapped TPM values. The CI and median for the gene JSD was calculated on the bootstrap resampled TPM values.
   - The broadness of gene expression pattern shown as the Tau value for _C. elegans_.
   - The broadness of gene expression pattern shown as the Tau value for _C. briggsae_.
+
+Gene data columns:
+* jsd_median_term - Jensen-Shannon distance calculated on 1000x bootstraps of the terminal cell type TPM values
+* pcor_median_term - Pearson correlation calculated on 1000x bootstraps of the terminal cell type TPM values
+* scor_median_term - Spearman correlation calculated on 1000x bootstraps of the terminal cell type TPM values
+* cos_median_term - Cosine angle calculated on 1000x bootstraps of the terminal cell type TPM values
+* cel_tau_median_term - C. elegans Tau calculated on 1000x bootstraps of the terminal cell type TPM values
+* cbr_tau_median_term - C. briggsae Tau calculated on 1000x bootstraps of the terminal cell type TPM values
+* jsd_median_pro - Jensen-Shannon distance calculated on 1000x bootstraps of the progenitor cell type TPM values
+* pcor_median_pro - Pearson correlation calculated on 1000x bootstraps of the progenitor cell type TPM values
+* scor_median_pro - Spearman correlation calculated on 1000x bootstraps of the progenitor cell type TPM values
+* cos_median_pro - Cosine angle calculated on 1000x bootstraps of the progenitor cell type TPM values
+* cel_tau_median_pro - C. elegans Tau calculated on 1000x bootstraps of the progenitor cell type TPM values
+* cbr_tau_median_pro - C. briggsae Tau calculated on 1000x bootstraps of the progenitor cell type TPM values
+* jsd_median_joint - Jensen-Shannon distance calculated on 1000x bootstraps of the joint cell type TPM values
+* pcor_median_joint - Pearson correlation calculated on 1000x bootstraps of the joint cell type TPM values
+* scor_median_joint - Spearman correlation calculated on 1000x bootstraps of the joint cell type TPM values
+* cos_median_joint - Cosine angle calculated on 1000x bootstraps of the joint cell type TPM values
+* cel_tau_median_joint - C. elegans Tau calculated on 1000x bootstraps of the joint cell type TPM values
+* cbr_tau_median_joint - C. briggsae Tau calculated on 1000x bootstraps of the joint cell type TPM values
+* cel_max_tpm_term - C. elegans maximum TPM value across all terminal cell types
+* cbr_max_tpm_term - C. briggsae maximum TPM value across all terminal cell types
+* max_tpm_term - Maximum TPM value across all terminal cell types across species
+* cel_max_tpm_pro - C. elegans maximum TPM value across all progenitor cell types
+* cbr_max_tpm_pro - C. briggsae maximum TPM value across all progenitor cell types
+* max_tpm_pro - Maximum TPM value across all progenitor cell types across species
+* elegans_id - C. elegans WBGene name
+* elegans_gene_long_name - C. elegans transcript name
+* briggsae_id - C. briggsae WBGene name
+* briggsae_gene_short_name - C. briggsae gene short name
+* briggsae_gene_long_name - C. briggsae transcript name
+* orthology_conf - Confidence in the orthology assignment with 1:1 being the highest, followed by confident canonical then canonical
+* percent_identity - Percent identity in a Smith-Waterman alignment between C. elegans and C. briggsae
+* percent_similarity - Percent similarity in a Smith-Waterman alignment between C. elegans and C. briggsae
+* syntenic - Whether the gene has been found to be syntenic between species
+* OG - The orthogroup number for reference with the orthogroup supplementary table
+* cel_OG_count - Number of C. elegans genes in the orthogroup
+* cbr_OG_count - Number of C. briggsae genes in the orthogroup
+* WormCat.1 - WormCat tier one term
+* WormCat.2 - WormCat tier two term
+* WormCat.3 - WormCat tier three term
+* omega - The dN/dS values calculated in this study
+* Cutter_Ka - Ka values calculted in Tu et al. 2015
+* Cutter_Ks - Ks values calculted in Tu et al. 2015
+* Cutter_Ka.Ks - Ka/Ks values calculted in Tu et al. 2015
+* PS.Value - Phylostrata values calculated in Ma et al., 2023
+* PS.Name - Phylostrata names calculated in Ma et al., 2023
+* maternal - Whether the gene was maternally inherited according to have an expression above zero in the first cell division from Tintori et al., 2016
+
 ---
 </p>
 </p>
