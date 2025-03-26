@@ -73,7 +73,7 @@ cello("/Path/To/The/Downloaded/Data/Cello/") # launch with elegans briggsae data
 
  #### Summary:
 <p>
- Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, of individual cell class subsets, and of embryo time subsets. All of the joint projections are generated using Seurat V4 CCA. We have also included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are displayed on their own in the same UMAP embeddings.
+ Using VisCello, you can visualize the expression of your favorite gene across the <em>C. elegans</em> and <em>C. briggsae</em> single-cell datasets in a number of different UMAP projections. Here we have included joint projections of the global dataset, of individual cell class subsets, and of embryo time subsets. All of the joint projections are generated using Seurat V5 RPCA. We have also included projections in which the <em>C. elegans</em> and <em>C. briggsae</em> cells are displayed on their own in the same UMAP embeddings.
 </p>
 
 <p>
