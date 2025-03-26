@@ -189,7 +189,7 @@ You can search for your favorite gene from either of the species by looking up t
 <p>
 <p>
  
-The gene summaries that will be uploaded in the gene_plots/ directory describe how the gene expression profiles differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for pha-4:
+The gene summaries that are uploaded in the gene_plots/ directory describe how the gene expression profiles differ between _C. elegans_ and _C. briggsae_ using a variety of summary statistics. The description of what is included in these summaries are below with an example plot for pha-4:
 
 <p align="center">
   <img width="1200" src=/Example_Images/ceh-53.png>
@@ -289,7 +289,7 @@ Available here is the expression value of every gene in the _C. elegans_ and _C.
 <p>
  <p>
   
-To identify genes differentially expressed between _C. elegans_ and _C. briggsae_ within the homologous cell-types, we used Seurat V4. A Wilcoxon Rank Sum test was run between the cells of that cell-type from _C. elegans_ against the cells of that cell-type from _C. briggsae_. The data have been filtered for an adjusted p-value less than 0.05 and a log2 fold-change of greater than 1 or less than -1. The columns in the table are as below:
+To identify genes differentially expressed between _C. elegans_ and _C. briggsae_ within the homologous cell-types, we used Seurat V5. A Wilcoxon Rank Sum test was run between the cells of that cell-type from _C. elegans_ against the cells of that cell-type from _C. briggsae_. The data have been filtered for an adjusted p-value less than 0.05 and a log2 fold-change of greater than 1 or less than -1. The columns in the table are as below:
 
  - p_val - The unadjusted p-value between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
  - avg_log2FC - The log2 fold-change between _C. elegans_ cells and _C. briggsae_ cells for that gene in that cell-type.
