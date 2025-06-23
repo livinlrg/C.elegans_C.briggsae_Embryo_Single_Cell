@@ -1,8 +1,8 @@
 # Lineage-resolved analysis of embryonic gene expression evolution in <I>C. elegans</I> and <I>C. briggsae</I>
 Christopher R. L. Large, Rupa Khanal, LaDeana Hillier, Chau Huynh, Connor Kubo, Junhyong Kim, Robert Waterston, and John I. Murray
 
+__[C. Large, R. Khanal, L. Hillier, C. Huynh, C. Kubo, J. Kim, R. Waterston, J. Murray, Lineage-resolved analysis of embryonic gene expression evolution in _C. elegans_ and _C. briggsae_. _Science_ **388**, adu8249 (2025).](https://www.science.org/doi/10.1126/science.adu8249)__
 
-__[Preprint Link](https://www.biorxiv.org/content/10.1101/2024.02.03.578695v1)__
 #### For queries about the dataset, please reach out to:
 <p>
     christopher.large [at] pennmedicine.upenn.edu<br>
